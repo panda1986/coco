@@ -98,10 +98,10 @@ def write_log(msg):
 If you want the crop rectangle to start at top corner X: 50 Y: 100 and the crop rectangle to be of size W: 640 H:480, then use the command:
 convert foo.png -crop 640x480+50+100 out.png
 '''
-def convert(pos, postfix, source):
+def convert(pos, source):
     #if os.path.exists(pos["pngName"]):
         #os.remove(pos["pngName"])
-    cmd = 'convert %s -crop %dx%d+%d+%d %s' % (source, pos["w"], pos["h"], pos["x"], pos["y"], postfix + pos["pngName"]);
+    cmd = 'convert %s -crop %dx%d+%d+%d %s' % (source, pos["w"], pos["h"], pos["x"], pos["y"], pos["pngName"]);
 
     (code, stdout_str, stderr_str) = run_process_instant_read_output(cmd, timeout=60);
 
@@ -132,7 +132,8 @@ def deal_img(src):
 
     #  convert to grey level image
     Lim = im.convert('L')
-    Lim.save(name + '_''fun_Level.png')
+    mid = name + '_''fun_Level.png'
+    Lim.save(mid)
     #  setup a converting table with constant threshold
     threshold = 80
     table = []
@@ -147,7 +148,17 @@ def deal_img(src):
 
     final = name + '_fun_binary.png'
     bim.save(final)
-    return final
+    return mid, final
+
+def clear(source, count, amount, middle):
+    if os.path.exists(source):
+        os.remove(source)
+    if len(middle) > 0 and os.path.exists(middle):
+        os.remove(middle)
+    if len(count) > 0 and os.path.exists(count):
+        os.remove(count)
+    if len(amount) > 0 and os.path.exists(amount):
+        os.remove(amount)
 
 # should sleep some seconds to prepare page
 start_sleep = 10
@@ -195,39 +206,47 @@ while True:
     im = pyautogui.screenshot(source)
     write_log("screen shot %s success" % (source))
 
-    code = convert(CountDownPos, tt, source)
+    CountDownPos["pngName"] = "./imgs/" + tt + "count_down.png"
+    code = convert(CountDownPos, source)
     if code != error_success:
         write_log("convert crop count down failed, loop continue")
+        clear(source, "", "", "")
         continue
 
-    code = convert(AmountBetPos, tt, source)
+    AmountBetPos["pngName"] = "./imgs/" + tt + "amount_bet.png"
+    code = convert(AmountBetPos, source)
     if code != error_success:
         write_log("convert crop amount bet failed, loop continue")
+        clear(source, CountDownPos["pngName"], "", "")
         continue
 
-    res = image_to_string(tt + CountDownPos["pngName"], plus="-psm 7")
+    res = image_to_string(CountDownPos["pngName"], plus="-psm 7")
     if len(res) == 0:
         write_log("ocr count down text failed, loop continue")
+        clear(source, CountDownPos["pngName"], AmountBetPos["pngName"], "")
         continue
 
     try:
         CountDownPos["result"] = int(res)
     except Exception, ex:
         write_log("parse count down text to int failed, exception, ex=%s, stack=%s, loop continue" % (ex, traceback.format_exc()))
+        clear(source, CountDownPos["pngName"], AmountBetPos["pngName"], "")
         continue
     finally:
         pass
 
     write_log("ocr count down success, count down=%d" % (CountDownPos["result"]))
 
-    final = deal_img(tt + AmountBetPos["pngName"])
+    middle, final = deal_img(AmountBetPos["pngName"])
     res = image_to_string(final, plus="-l eng")
     if len(res) == 0:
         write_log("ocr amount bet text failed, loop continue")
+        clear(source, CountDownPos["pngName"], AmountBetPos["pngName"], middle)
         continue
 
     values = res.split('\n')
     print "ocr %s success, res=%s" % (final, values)
+    clear(source, CountDownPos["pngName"], AmountBetPos["pngName"], middle)
     # decode_bet = True
     # for v in values:
     #     print "amount item=", v
