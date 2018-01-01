@@ -174,7 +174,7 @@ start_sleep = 10
 pyautogui.PAUSE = 1
 min_count_down = 6
 max_data_error_diff = 1000000
-max_master_diff = 100000
+max_diff_per = 40
 write_log("sleep %d seconds to capture" % (start_sleep))
 time.sleep(start_sleep)
 
@@ -236,16 +236,17 @@ while True:
     if code != error_success:
         write_error_log("convert crop amount bet failed, loop continue")
         clear(source, CountDownPos["pngName"], "", "")
-        res = pyautogui.locateAllOnScreen('enter.png')
-        if len(res) > 0:
-            write_log("has enter, click to enter game")
-            pyautogui.click(EnterClickPos["x"], EnterClickPos["y"])
         continue
 
     res = image_to_string(CountDownPos["pngName"], plus="-psm 7")
     if len(res) == 0:
         write_error_log("ocr count down text failed, loop continue")
         clear(source, CountDownPos["pngName"], AmountBetPos["pngName"], "")
+        res = list(pyautogui.locateAllOnScreen('enter.png'))
+        if len(res) > 0:
+            write_log("has enter, click to enter game, and mouse move to origin")
+            pyautogui.click(EnterClickPos["x"], EnterClickPos["y"])
+            pyautogui.moveTo(0, 0)
         continue
 
     try:
@@ -296,11 +297,12 @@ while True:
     if AmountBetPos["master"] < last_master or AmountBetPos["slave"] < last_slave:
         write_log("amount bet=%f %f invalid, less than last=%f %f" % (data[0], data[1], last_master, last_slave))
         continue
+
     # if master-slave > 10W set slave; if master - slave < -10W, set master; if diff > 100W， data error
     diff = AmountBetPos["master"] - AmountBetPos["slave"]
-    if diff > max_data_error_diff or diff < -max_data_error_diff:
-        write_log("amount bet=%f %f invalid, diff to large, ignore this" % (data[0], data[1]))
-        continue
+    # if diff > max_data_error_diff or diff < -max_data_error_diff:
+    #     write_log("amount bet=%f %f invalid, diff to large, ignore this" % (data[0], data[1]))
+    #     continue
     last_master = AmountBetPos["master"]
     last_slave = AmountBetPos["slave"]
 
@@ -310,12 +312,19 @@ while True:
         continue
 
     buy_option = ''
-    if diff > max_master_diff:
-        buy_option = 'slave'
-    if diff < -max_master_diff:
-        buy_option = 'master'
+    per = 0
+    # if diff >0, diffPer = diff * 100 / master; diffPer > 40; set slave
+    if diff > 0:
+        per = diff * 100 / AmountBetPos["master"];
+        if per > max_diff_per:
+            buy_option = 'slave'
+    if diff < 0:
+        per = diff * 100 / AmountBetPos["slave"]
+        if per < -max_diff_per:
+            buy_option = 'master'
+
     if buy_option == '':
-        write_log("amount bet=%f %f, diff=%f, not satisfy condition, ignore, last=%f %f" % (data[0], data[1], diff, last_master, last_slave))
+        write_log("amount bet=%f %f, diff=%f, per=%f, not satisfy condition, ignore, last=%f %f" % (data[0], data[1], diff, per, last_master, last_slave))
         continue
 
     write_log("amount bet=%f %f, diff=%f, buy option=%s, and sleep %d, last=%f %f" % (data[0], data[1], diff, buy_option, CountDownPos["result"], last_master, last_slave))
