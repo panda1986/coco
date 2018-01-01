@@ -27,7 +27,6 @@ def __create_process(command, stdout_fd, stderr_fd, log_file=None):
 
     return process;
 
-
 def run_process_instant_read_output(command, timeout):
     (code, stdout_str, stderr_str) = (error_success, None, None);
     process = None;
@@ -94,6 +93,16 @@ def write_log(msg):
 
     f.close();
 
+def write_error_log(msg):
+    f = open("./coco_error.log", "a+");
+
+    time = now();
+    msg = "[%s] %s" % (time, msg);
+
+    f.write("%s\n" % (msg));
+
+    f.close();
+
 '''
 If you want the crop rectangle to start at top corner X: 50 Y: 100 and the crop rectangle to be of size W: 640 H:480, then use the command:
 convert foo.png -crop 640x480+50+100 out.png
@@ -107,7 +116,7 @@ def convert(pos, source):
 
     if code != 0:
         code = system_convert_crop_png_error;
-        print("convert crop error, cmd=%s, code=%d" % (cmd, code));
+        write_error_log("convert crop error, cmd=%s, code=%d" % (cmd, code))
         return (code, None);
     return error_success
 
@@ -162,6 +171,10 @@ def clear(source, count, amount, middle):
 
 # should sleep some seconds to prepare page
 start_sleep = 10
+pyautogui.PAUSE = 1
+min_count_down = 6
+max_data_error_diff = 1000000
+max_master_diff = 100000
 write_log("sleep %d seconds to capture" % (start_sleep))
 time.sleep(start_sleep)
 
@@ -180,7 +193,8 @@ AmountBetPos = {
     "w": 74 * 2,
     "h":35 * 2,
     "pngName": "amount_bet.png",
-    "result": []
+    "master": 0,
+    "slave": 0
 }
 
 MasterClickPos = {
@@ -197,96 +211,122 @@ ConfirmClickPos = {
     "x": 659,
     "y": 660
 }
+EnterClickPos = {
+    "x": 600,
+    "y": 452
+}
 
-pyautogui.PAUSE = 1
-
+last_master = 0.0
+last_slave = 0.0
 while True:
     tt = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))
     source = "./imgs/whole_%s.png" % (tt)
     im = pyautogui.screenshot(source)
-    write_log("screen shot %s success" % (source))
+    #write_log("screen shot %s success" % (source))
 
     CountDownPos["pngName"] = "./imgs/" + tt + "count_down.png"
     code = convert(CountDownPos, source)
     if code != error_success:
-        write_log("convert crop count down failed, loop continue")
+        write_error_log("convert crop count down failed, loop continue")
         clear(source, "", "", "")
         continue
 
     AmountBetPos["pngName"] = "./imgs/" + tt + "amount_bet.png"
     code = convert(AmountBetPos, source)
     if code != error_success:
-        write_log("convert crop amount bet failed, loop continue")
+        write_error_log("convert crop amount bet failed, loop continue")
         clear(source, CountDownPos["pngName"], "", "")
+        res = pyautogui.locateAllOnScreen('enter.png')
+        if len(res) > 0:
+            write_log("has enter, click to enter game")
+            pyautogui.click(EnterClickPos["x"], EnterClickPos["y"])
         continue
 
     res = image_to_string(CountDownPos["pngName"], plus="-psm 7")
     if len(res) == 0:
-        write_log("ocr count down text failed, loop continue")
+        write_error_log("ocr count down text failed, loop continue")
         clear(source, CountDownPos["pngName"], AmountBetPos["pngName"], "")
         continue
 
     try:
         CountDownPos["result"] = int(res)
     except Exception, ex:
-        write_log("parse count down text to int failed, exception, ex=%s, stack=%s, loop continue" % (ex, traceback.format_exc()))
+        write_error_log("parse count down text to int failed, exception, ex=%s, stack=%s, loop continue" % (ex, traceback.format_exc()))
         clear(source, CountDownPos["pngName"], AmountBetPos["pngName"], "")
         continue
     finally:
         pass
 
-    write_log("ocr count down success, count down=%d" % (CountDownPos["result"]))
-
     middle, final = deal_img(AmountBetPos["pngName"])
     res = image_to_string(final, plus="-l eng")
     if len(res) == 0:
-        write_log("ocr amount bet text failed, loop continue")
+        write_error_log("ocr amount bet text failed, loop continue")
         clear(source, CountDownPos["pngName"], AmountBetPos["pngName"], middle)
         continue
 
-    values = res.split('\n')
-    print "ocr %s success, res=%s" % (final, values)
     clear(source, CountDownPos["pngName"], AmountBetPos["pngName"], middle)
-    # decode_bet = True
-    # for v in values:
-    #     print "amount item=", v
-    #     for k in range(len(v)):
-    #         if not v[k].isdigit() and v[k] != '.':
-    #             v = v[:k]
-    #             break
-    #     print "after deal, amount item=", v
-    #     if len(v) > 0:
-    #         try:
-    #             AmountBetPos["result"].append(float(v))
-    #         except Exception, ex:
-    #             write_log("parse amount bet to float failed, exception, ex=%s, stack=%s, loop continue" % (ex, traceback.format_exc()))
-    #             decode_bet = False
-    #         finally:
-    #             pass
-    #
-    # if not decode_bet:
-    #     continue
-    #
-    # if len(AmountBetPos["result"]) != 2:
-    #     write_log("ocr amount bet detail number failed, loop continue")
-    #     continue
-    #
-    # write_log("ocr amount bet detail success, amount bet=%s" % (AmountBetPos["result"]))
+    values = res.split('\n')
+    decode_bet = True
+    data = []
+    for v in values:
+        for k in range(len(v)):
+            if not v[k].isdigit() and v[k] != '.':
+                v = v[:k]
+                break
+        if len(v) > 0:
+            try:
+                data.append(float(v))
+            except Exception, ex:
+                write_error_log("parse amount bet to float failed, exception, ex=%s, stack=%s, loop continue" % (ex, traceback.format_exc()))
+                decode_bet = False
+            finally:
+                pass
 
-    '''#check if need buy
-    condition = False
+    if not decode_bet:
+        continue
 
-    #comput buy master or slave
-    buy_option = 'master' # slave
+    if len(data) != 2:
+        write_error_log("ocr amount bet detail number failed, ori=%s, res=%s loop continue" % (values, data))
+        continue
 
-    if condition:
-        print "need buy, buy option=", buy_option
-        if buy_option == 'master':
-            pyautogui.click(MasterClickPos["x"], MasterClickPos["y"])
-        else:
-            pyautogui.click(SlaveClickPos["x"], SlaveClickPos["y"])
-        pyautogui.click(ConfirmClickPos["x"], ConfirmClickPos["y"])
-    '''
+    AmountBetPos["master"] = data[0]
+    AmountBetPos["slave"] = data[1]
+    write_log("ocr amount bet detail success, amount bet=%f %f" % (data[0], data[1]))
+
+    if AmountBetPos["master"] < last_master or AmountBetPos["slave"] < last_slave:
+        write_log("amount bet=%f %f invalid, less than last=%f %f" % (data[0], data[1], last_master, last_slave))
+        continue
+    # if master-slave > 10W set slave; if master - slave < -10W, set master; if diff > 100W， data error
+    diff = AmountBetPos["master"] - AmountBetPos["slave"]
+    if diff > max_data_error_diff or diff < -max_data_error_diff:
+        write_log("amount bet=%f %f invalid, diff to large, ignore this" % (data[0], data[1]))
+        continue
+    last_master = AmountBetPos["master"]
+    last_slave = AmountBetPos["slave"]
+
+    #check if need buy
+    if CountDownPos["result"] > min_count_down:
+        write_log("count down=%d not staisfy, ignore, last=%f %f" % (CountDownPos["result"], last_master, last_slave))
+        continue
+
+    buy_option = ''
+    if diff > max_master_diff:
+        buy_option = 'slave'
+    if diff < -max_master_diff:
+        buy_option = 'master'
+    if buy_option == '':
+        write_log("amount bet=%f %f, diff=%f, not satisfy condition, ignore, last=%f %f" % (data[0], data[1], diff, last_master, last_slave))
+        continue
+
+    write_log("amount bet=%f %f, diff=%f, buy option=%s, and sleep %d, last=%f %f" % (data[0], data[1], diff, buy_option, CountDownPos["result"], last_master, last_slave))
+    if buy_option == 'master':
+        pyautogui.click(MasterClickPos["x"], MasterClickPos["y"])
+    else:
+        pyautogui.click(SlaveClickPos["x"], SlaveClickPos["y"])
+    pyautogui.click(ConfirmClickPos["x"], ConfirmClickPos["y"])
+    last_master = last_slave = 0
+    time.sleep(CountDownPos["result"])
+
 
 
 
