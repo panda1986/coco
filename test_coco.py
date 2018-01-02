@@ -171,10 +171,14 @@ def clear(source, count, amount, middle):
 
 # should sleep some seconds to prepare page
 start_sleep = 10
-pyautogui.PAUSE = 1
+pyautogui.PAUSE = 0.3
+pyautogui.FAILSAFE = False
 min_count_down = 6
 max_data_error_diff = 1000000
+check_data_change_interval = 300000
 max_diff_per = 40
+positive_max_per = 30
+positive_min_per = 5
 write_log("sleep %d seconds to capture" % (start_sleep))
 time.sleep(start_sleep)
 
@@ -245,8 +249,9 @@ while True:
         res = list(pyautogui.locateAllOnScreen('enter.png'))
         if len(res) > 0:
             write_log("has enter, click to enter game, and mouse move to origin")
+            last_master = last_slave = 0
             pyautogui.click(EnterClickPos["x"], EnterClickPos["y"])
-            pyautogui.moveTo(0, 0)
+            pyautogui.moveTo(0, 500)
         continue
 
     try:
@@ -294,9 +299,11 @@ while True:
     AmountBetPos["slave"] = data[1]
     write_log("ocr amount bet detail success, amount bet=%f %f" % (data[0], data[1]))
 
-    if AmountBetPos["master"] < last_master or AmountBetPos["slave"] < last_slave:
-        write_log("amount bet=%f %f invalid, less than last=%f %f" % (data[0], data[1], last_master, last_slave))
-        continue
+    # d1 = AmountBetPos["master"] - last_master
+    # d2 = AmountBetPos["slave"] - last_slave
+    # if d1 < 0 or d2 < 0 or d1 > check_data_change_interval or d2 > check_data_change_interval:
+    #     write_log("amount bet=%f %f invalid, less than last=%f %f" % (data[0], data[1], last_master, last_slave))
+    #     continue
 
     # if master-slave > 10W set slave; if master - slave < -10W, set master; if diff > 100W， data error
     diff = AmountBetPos["master"] - AmountBetPos["slave"]
@@ -307,32 +314,44 @@ while True:
     last_slave = AmountBetPos["slave"]
 
     #check if need buy
-    if CountDownPos["result"] > min_count_down:
+    if CountDownPos["result"] > min_count_down or CountDownPos["result"] < 0:
         write_log("count down=%d not staisfy, ignore, last=%f %f" % (CountDownPos["result"], last_master, last_slave))
         continue
 
     buy_option = ''
     per = 0
+
     # if diff >0, diffPer = diff * 100 / master; diffPer > 40; set slave
+    # if diff > 0:
+    #     per = diff * 100 / AmountBetPos["master"];
+    #     if per > max_diff_per:
+    #         buy_option = 'slave'
+    # if diff < 0:
+    #     per = diff * 100 / AmountBetPos["slave"]
+    #     if per < -max_diff_per:
+    #         buy_option = 'master'
+
     if diff > 0:
         per = diff * 100 / AmountBetPos["master"];
-        if per > max_diff_per:
-            buy_option = 'slave'
-    if diff < 0:
-        per = diff * 100 / AmountBetPos["slave"]
-        if per < -max_diff_per:
+        if per <= positive_max_per and per >= positive_min_per:
             buy_option = 'master'
+    if diff < 0:
+        per = -diff * 100 / AmountBetPos["slave"]
+        if per <= positive_max_per and per >= positive_min_per:
+            buy_option = 'slave'
 
-    if buy_option == '':
-        write_log("amount bet=%f %f, diff=%f, per=%f, not satisfy condition, ignore, last=%f %f" % (data[0], data[1], diff, per, last_master, last_slave))
-        continue
-
-    write_log("amount bet=%f %f, diff=%f, buy option=%s, and sleep %d, last=%f %f" % (data[0], data[1], diff, buy_option, CountDownPos["result"], last_master, last_slave))
     if buy_option == 'master':
         pyautogui.click(MasterClickPos["x"], MasterClickPos["y"])
-    else:
+        pyautogui.click(ConfirmClickPos["x"], ConfirmClickPos["y"])
+        write_log("set master, amount bet=%f %f, diff=%f, per=%f, and sleep %d, last=%f %f" % (
+        data[0], data[1], diff, per, CountDownPos["result"], last_master, last_slave))
+    elif buy_option == 'slave':
         pyautogui.click(SlaveClickPos["x"], SlaveClickPos["y"])
-    pyautogui.click(ConfirmClickPos["x"], ConfirmClickPos["y"])
+        pyautogui.click(ConfirmClickPos["x"], ConfirmClickPos["y"])
+        write_log("set slave, amount bet=%f %f, diff=%f, per=%f, and sleep %d, last=%f %f" % (data[0], data[1], diff, per, CountDownPos["result"], last_master, last_slave))
+    else:
+        write_log("amount bet=%f %f, diff=%f, per=%f, not satisfy condition, ignore, last=%f %f" % (data[0], data[1], diff, per, last_master, last_slave))
+
     last_master = last_slave = 0
     time.sleep(CountDownPos["result"])
 
