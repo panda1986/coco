@@ -168,56 +168,97 @@ def clear(source, count, amount, middle):
         os.remove(count)
     if len(amount) > 0 and os.path.exists(amount):
         os.remove(amount)
+    pass
 
 # should sleep some seconds to prepare page
+CurrentMacSize = 15
 start_sleep = 10
 pyautogui.PAUSE = 0.3
 pyautogui.FAILSAFE = False
-min_count_down = 6
+min_count_down = 5
 max_data_error_diff = 1000000
 check_data_change_interval = 300000
-max_diff_per = 40
+max_diff_per = 35
 positive_max_per = 30
 positive_min_per = 5
 write_log("sleep %d seconds to capture" % (start_sleep))
 time.sleep(start_sleep)
 
+# CountDownPos = {
+#     "x": 130 * 2,
+#     "y":120 * 2,
+#     "w": 83 * 2,
+#     "h":33 * 2,
+#     "pngName": "count_down.png",
+#     "result": 0,
+# }
+
 CountDownPos = {
     "x": 130 * 2,
-    "y":120 * 2,
-    "w": 83 * 2,
-    "h":33 * 2,
+    "y":105 * 2,
+    "w": 119 * 2,
+    "h":47 * 2,
     "pngName": "count_down.png",
     "result": 0,
 }
 
+# AmountBetPos = {
+#     "x": 1171 * 2,
+#     "y":97 * 2,
+#     "w": 74 * 2,
+#     "h":35 * 2,
+#     "pngName": "amount_bet.png",
+#     "master": 0,
+#     "slave": 0
+# }
+
 AmountBetPos = {
-    "x": 1171 * 2,
-    "y":97 * 2,
-    "w": 74 * 2,
-    "h":35 * 2,
+    "x": 1564 * 2,
+    "y":78 * 2,
+    "w": 120 * 2,
+    "h":50 * 2,
     "pngName": "amount_bet.png",
     "master": 0,
     "slave": 0
 }
 
+# MasterClickPos = {
+#     "x": 752,
+#     "y": 563
+# }
+#
+# SlaveClickPos = {
+#     "x": 739,
+#     "y": 599
+# }
+#
+# ConfirmClickPos = {
+#     "x": 659,
+#     "y": 660
+# }
+
 MasterClickPos = {
-    "x": 752,
-    "y": 563
+    "x": 865,
+    "y": 714
 }
 
 SlaveClickPos = {
-    "x": 739,
-    "y": 599
+    "x": 855,
+    "y": 778
 }
 
 ConfirmClickPos = {
-    "x": 659,
-    "y": 660
+    "x": 890,
+    "y": 858
 }
+
+# EnterClickPos = {
+#     "x": 600,
+#     "y": 452
+# }
 EnterClickPos = {
-    "x": 600,
-    "y": 452
+    "x": 800,
+    "y": 570
 }
 
 last_master = 0.0
@@ -235,13 +276,6 @@ while True:
         clear(source, "", "", "")
         continue
 
-    AmountBetPos["pngName"] = "./imgs/" + tt + "amount_bet.png"
-    code = convert(AmountBetPos, source)
-    if code != error_success:
-        write_error_log("convert crop amount bet failed, loop continue")
-        clear(source, CountDownPos["pngName"], "", "")
-        continue
-
     res = image_to_string(CountDownPos["pngName"], plus="-psm 7")
     if len(res) == 0:
         write_error_log("ocr count down text failed, loop continue")
@@ -251,7 +285,7 @@ while True:
             write_log("has enter, click to enter game, and mouse move to origin")
             last_master = last_slave = 0
             pyautogui.click(EnterClickPos["x"], EnterClickPos["y"])
-            pyautogui.moveTo(0, 500)
+            pyautogui.moveTo(10, 500)
         continue
 
     try:
@@ -259,11 +293,30 @@ while True:
     except Exception, ex:
         write_error_log("parse count down text to int failed, exception, ex=%s, stack=%s, loop continue" % (ex, traceback.format_exc()))
         clear(source, CountDownPos["pngName"], AmountBetPos["pngName"], "")
+        res = list(pyautogui.locateAllOnScreen('enter.png'))
+        if len(res) > 0:
+            write_log("has enter, click to enter game, and mouse move to origin")
+            last_master = last_slave = 0
+            pyautogui.click(EnterClickPos["x"], EnterClickPos["y"])
+            pyautogui.moveTo(10, 500)
         continue
     finally:
         pass
 
+    #check if need buy
+    if CountDownPos["result"] > min_count_down or CountDownPos["result"] < 0:
+        write_log("count down=%d not staisfy, ignore, last=%f %f" % (CountDownPos["result"], last_master, last_slave))
+        continue
+
+    AmountBetPos["pngName"] = "./imgs/" + tt + "amount_bet.png"
+    code = convert(AmountBetPos, source)
+    if code != error_success:
+        write_error_log("convert crop amount bet failed, loop continue")
+        clear(source, CountDownPos["pngName"], "", "")
+        continue
+
     middle, final = deal_img(AmountBetPos["pngName"])
+    write_log("deal amountbet success, generate final png")
     res = image_to_string(final, plus="-l eng")
     if len(res) == 0:
         write_error_log("ocr amount bet text failed, loop continue")
@@ -313,32 +366,27 @@ while True:
     last_master = AmountBetPos["master"]
     last_slave = AmountBetPos["slave"]
 
-    #check if need buy
-    if CountDownPos["result"] > min_count_down or CountDownPos["result"] < 0:
-        write_log("count down=%d not staisfy, ignore, last=%f %f" % (CountDownPos["result"], last_master, last_slave))
-        continue
-
     buy_option = ''
     per = 0
 
-    # if diff >0, diffPer = diff * 100 / master; diffPer > 40; set slave
-    # if diff > 0:
-    #     per = diff * 100 / AmountBetPos["master"];
-    #     if per > max_diff_per:
-    #         buy_option = 'slave'
-    # if diff < 0:
-    #     per = diff * 100 / AmountBetPos["slave"]
-    #     if per < -max_diff_per:
-    #         buy_option = 'master'
-
+    #if diff >0, diffPer = diff * 100 / master; diffPer > 40; set slave
     if diff > 0:
         per = diff * 100 / AmountBetPos["master"];
-        if per <= positive_max_per and per >= positive_min_per:
-            buy_option = 'master'
-    if diff < 0:
-        per = -diff * 100 / AmountBetPos["slave"]
-        if per <= positive_max_per and per >= positive_min_per:
+        if per > max_diff_per:
             buy_option = 'slave'
+    if diff < 0:
+        per = diff * 100 / AmountBetPos["slave"]
+        if per < -max_diff_per:
+            buy_option = 'master'
+
+    # if diff > 0:
+    #     per = diff * 100 / AmountBetPos["master"];
+    #     if per <= positive_max_per and per >= positive_min_per:
+    #         buy_option = 'master'
+    # if diff < 0:
+    #     per = -diff * 100 / AmountBetPos["slave"]
+    #     if per <= positive_max_per and per >= positive_min_per:
+    #         buy_option = 'slave'
 
     if buy_option == 'master':
         pyautogui.click(MasterClickPos["x"], MasterClickPos["y"])
