@@ -170,6 +170,11 @@ def clear(source, count, amount, middle):
         os.remove(amount)
     pass
 
+def clear_final(final):
+    if len(final) > 0 and os.path.exists(final):
+        os.remove(final)
+    pass
+
 # should sleep some seconds to prepare page
 CurrentMacSize = 15
 start_sleep = 10
@@ -305,6 +310,7 @@ while True:
 
     #check if need buy
     if CountDownPos["result"] > min_count_down or CountDownPos["result"] < 0:
+        clear(source, CountDownPos["pngName"], AmountBetPos["pngName"], "")
         write_log("count down=%d not staisfy, ignore, last=%f %f" % (CountDownPos["result"], last_master, last_slave))
         continue
 
@@ -348,6 +354,7 @@ while True:
         write_error_log("ocr amount bet detail number failed, ori=%s, res=%s loop continue" % (values, data))
         continue
 
+    clear_final(final)
     AmountBetPos["master"] = data[0]
     AmountBetPos["slave"] = data[1]
     write_log("ocr amount bet detail success, amount bet=%f %f" % (data[0], data[1]))
