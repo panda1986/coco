@@ -12,5 +12,5 @@ while True:
         tt = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         source = "./imgs/record_%s.png" % (tt)
         pyautogui.screenshot(source)
-        next = next + 3600
+        next = next + 1800
     time.sleep(5)
