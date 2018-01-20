@@ -313,13 +313,13 @@ def deal_account_value(source):
     code = convert(htc_constant.AccountValuePos, source)
     if code != error_success:
         write_log("convert crop account failed, loop continue")
-        #clear(source, "", "", "")
+        clear(source, "", "", "")
         return account_value
 
     res = image_to_string(htc_constant.AccountValuePos["pngName"], plus="-l eng")
     if len(res) == 0:
         write_log("ocr account value text failed, loop continue")
-        #clear(source, htc_constant.CountDownPos["pngName"], "", "")
+        clear(source, htc_constant.CountDownPos["pngName"], "", "")
         return account_value
 
     try:
@@ -327,7 +327,7 @@ def deal_account_value(source):
     except Exception, ex:
         write_log("parse account value text to int failed, exception, ex=%s, stack=%s, loop continue" % (
         ex, traceback.format_exc()))
-        #clear(source, htc_constant.AccountValuePos["pngName"], "", "")
+        clear(source, htc_constant.AccountValuePos["pngName"], "", "")
         return -1
     finally:
         return account_value
@@ -339,7 +339,6 @@ def deal_account_value(source):
 #### parse master, slave
 #### return count down, master, slave
 def do_cycle():
-    write_log("test, come to do cycle.....")
     valid = False
     (count_down, master, slave) = (0, 0, 0)
 
@@ -348,7 +347,6 @@ def do_cycle():
     im = pyautogui.screenshot(source)
     count_down = deal_count_down(source)
 
-    write_log("test, parse count down success....")
     # check if need buy
     if count_down > htc_constant.min_count_down or count_down < 0:
         clear(source, htc_constant.CountDownPos["pngName"], "", "")
@@ -357,7 +355,6 @@ def do_cycle():
         return (valid, count_down, master, slave)
 
     valid = True
-    write_log("count down satisfy, begin to parse master, slave")
     (master, slave) = deal_master_slave(source, tt)
     write_log("count down=%d satisfy, master=%f, slave=%f" % (count_down, master, slave))
     return (valid, count_down, master, slave)

@@ -1,5 +1,6 @@
 #!python
 # -*- coding: utf-8 -*-
+import pyautogui
 
 class Constants:
     Screen15Config = {
@@ -90,10 +91,12 @@ class Constants:
     }
 
 min_count_down = 5
-CurrentMacSize = 15
 
+CurrentMacSize = 15
 sc = Constants.Screen15Config
-if CurrentMacSize == 13:
+screenWidth, screenHeight = pyautogui.size()
+if screenWidth == 1280:
+    CurrentMacSize = 13
     sc = Constants.Screen13Config
 
 CountDownPos = sc["CountDownPos"]
