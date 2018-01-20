@@ -224,7 +224,7 @@ def clear(source, count, amount, middle):
         os.remove(amount)
     pass
 
-def clear_final(final):
+def clear_single_png(final):
     if len(final) > 0 and os.path.exists(final):
         os.remove(final)
     pass
@@ -278,7 +278,7 @@ def deal_master_slave(source, tt):
             "ocr amount bet detail number failed, ori=%s, res=%s loop continue" % (values, data))
         return (master, slave)
 
-    clear_final(final)
+    clear_single_png(final)
     master = data[0]
     slave = data[1]
     write_log("deal amount master=%f, slave=%f" % (master, slave))
@@ -316,10 +316,13 @@ def deal_account_value(source):
         clear(source, "", "", "")
         return account_value
 
-    res = image_to_string(htc_constant.AccountValuePos["pngName"], plus="-l eng")
+    middle, final = deal_img(htc_constant.AccountValuePos["pngName"])
+    clear_single_png(source)
+    clear_single_png(htc_constant.AccountValuePos["pngName"])
+    clear_single_png(middle)
+    res = image_to_string(final, plus="-psm 8")
     if len(res) == 0:
         write_log("ocr account value text failed, loop continue")
-        clear(source, htc_constant.CountDownPos["pngName"], "", "")
         return account_value
 
     try:
@@ -327,7 +330,6 @@ def deal_account_value(source):
     except Exception, ex:
         write_log("parse account value text to int failed, exception, ex=%s, stack=%s, loop continue" % (
         ex, traceback.format_exc()))
-        clear(source, htc_constant.AccountValuePos["pngName"], "", "")
         return -1
     finally:
         return account_value

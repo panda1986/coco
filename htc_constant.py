@@ -89,15 +89,58 @@ class Constants:
             "pngName": "imgs/account.png",
         }
     }
+    ScreenImacConfig = {
+        "CountDownPos": {
+            "x": 236 * 2,
+            "y":109 * 2,
+            "w": 132 * 2,
+            "h":47 * 2,
+            "pngName": "count_down.png",
+            "result": 0
+        },
+        "AmountBetPos": {
+            "x": 1818 * 2,
+            "y":78 * 2,
+            "w": 132 * 2,
+            "h":54 * 2,
+            "pngName": "amount_bet.png",
+            "master": 0,
+            "slave": 0
+        },
+        "MasterClickPos": {
+            "x": 1047,
+            "y": 784
+        },
+        "SlaveClickPos": {
+            "x": 1042,
+            "y": 861
+        },
+        "ConfirmClickPos": {
+            "x": 1083,
+            "y": 945
+        },
+        "EnterClickPos": {
+            "x": 965,
+            "y": 1115
+        },
+        "EnterPng": "enter_imac.png",
+        "AccountValuePos": {
+            "x": 1527 * 2,
+            "y":111 * 2,
+            "w": 141 * 2,
+            "h":28 * 2,
+            "pngName": "imgs/account.png",
+        }
+    }
 
 min_count_down = 5
 
-CurrentMacSize = 15
 sc = Constants.Screen15Config
 screenWidth, screenHeight = pyautogui.size()
 if screenWidth == 1280:
-    CurrentMacSize = 13
     sc = Constants.Screen13Config
+elif screenWidth == 2048:
+    sc = Constants.ScreenImacConfig
 
 CountDownPos = sc["CountDownPos"]
 AmountBetPos = sc["AmountBetPos"]

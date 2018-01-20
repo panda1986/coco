@@ -69,12 +69,12 @@ while True:
     else:
         htc_utility.write_log("amount bet=%f %f, diff=%f, per=%f, not satisfy condition, ignore" % (master, slave, diff, per))
 
-    time.sleep(2)
+    time.sleep(5)
     (final_master, final_slave) = htc_utility.get_final_master_slave()
     htc_utility.write_log("get final master=%f, slave=%s" % (final_master, final_slave))
     # get final master, slave
 
-    time.sleep(5)
+    time.sleep(3)
     account_value = -1
     while True:
         tt = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
@@ -93,8 +93,7 @@ while True:
 
         htc_utility.write_log("next count down=%d, come to get account value, and insert into sql" % (count_down))
         account_value = htc_utility.deal_account_value(source)
-        htc_utility.clear(source, htc_constant.CountDownPos["pngName"], "", "")
-        htc_utility.clear_account(htc_constant.AccountValuePos["pngName"])
+        htc_utility.clear_single_png(htc_constant.CountDownPos["pngName"])
         if account_value >= 0:
             htc_utility.write_log("get account value=%d" % (account_value))
         else:
