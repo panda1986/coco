@@ -323,7 +323,7 @@ def deal_account_value(source):
         return account_value
 
     try:
-        account_value = int(res)
+        account_value = float(res)
     except Exception, ex:
         write_log("parse account value text to int failed, exception, ex=%s, stack=%s, loop continue" % (
         ex, traceback.format_exc()))
@@ -339,6 +339,7 @@ def deal_account_value(source):
 #### parse master, slave
 #### return count down, master, slave
 def do_cycle():
+    write_log("test, come to do cycle.....")
     valid = False
     (count_down, master, slave) = (0, 0, 0)
 
@@ -347,6 +348,7 @@ def do_cycle():
     im = pyautogui.screenshot(source)
     count_down = deal_count_down(source)
 
+    write_log("test, parse count down success....")
     # check if need buy
     if count_down > htc_constant.min_count_down or count_down < 0:
         clear(source, htc_constant.CountDownPos["pngName"], "", "")
@@ -355,7 +357,9 @@ def do_cycle():
         return (valid, count_down, master, slave)
 
     valid = True
+    write_log("count down satisfy, begin to parse master, slave")
     (master, slave) = deal_master_slave(source, tt)
+    write_log("count down=%d satisfy, master=%f, slave=%f" % (count_down, master, slave))
     return (valid, count_down, master, slave)
 
 

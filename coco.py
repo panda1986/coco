@@ -21,12 +21,16 @@ time.sleep(start_sleep)
 
 while True:
     (valid, count_down, master, slave) = htc_utility.do_cycle()
+    htc_utility.write_log("do cycle finish, valid=%d, count down=%d, master=%f, slave=%f" % (valid, count_down, master, slave))
     if not valid:
-        res = list(pyautogui.locateAllOnScreen(htc_constant.EnterPng))
-        if len(res) > 0:
-            htc_utility.write_log("has enter, click to enter game, and mouse move to origin")
-            pyautogui.click(htc_constant.EnterClickPos["x"], htc_constant.EnterClickPos["y"])
-            pyautogui.moveTo(10, 500)
+        if count_down <= 0:
+            htc_utility.write_log("not valid, check enter")
+            res = list(pyautogui.locateAllOnScreen(htc_constant.EnterPng))
+            if len(res) > 0:
+                htc_utility.write_log("has enter, click to enter game, and mouse move to origin")
+                pyautogui.click(htc_constant.EnterClickPos["x"], htc_constant.EnterClickPos["y"])
+                pyautogui.moveTo(10, 500)
+            htc_utility.write_log("check enter failed...")
         continue
 
     htc_utility.write_log("count down=%d satisfy, master=%f, slave=%f, come to comput buy option" % (count_down, master, slave))
@@ -93,8 +97,8 @@ while True:
 
         htc_utility.write_log("next count down=%d, come to get account value, and insert into sql" % (count_down))
         account_value = htc_utility.deal_account_value(source)
-        htc_utility.clear(source, htc_constant.CountDownPos["pngName"], "", "")
-        htc_utility.clear_account(htc_constant.AccountValuePos["pngName"])
+        #htc_utility.clear(source, htc_constant.CountDownPos["pngName"], "", "")
+        #htc_utility.clear_account(htc_constant.AccountValuePos["pngName"])
         if account_value >= 0:
             htc_utility.write_log("get account value=%d" % (account_value))
         else:

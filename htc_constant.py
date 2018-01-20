@@ -38,10 +38,10 @@ class Constants:
         },
         "EnterPng": "enter.png",
         "AccountValuePos": { #需计算
-            "x": 970 * 2,
-            "y":122 * 2,
-            "w": 95 * 2,
-            "h":17 * 2,
+            "x": 1297 * 2,
+            "y":110 * 2,
+            "w": 134 * 2,
+            "h":24 * 2,
             "pngName": "imgs/account.png",
         }
     }
@@ -90,7 +90,7 @@ class Constants:
     }
 
 min_count_down = 5
-CurrentMacSize = 13
+CurrentMacSize = 15
 
 sc = Constants.Screen15Config
 if CurrentMacSize == 13:
