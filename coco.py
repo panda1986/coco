@@ -16,19 +16,23 @@ check_data_change_interval = 300000
 max_diff_per = 35
 positive_max_per = 30
 positive_min_per = 5
+last_count_down = -1
 htc_utility.write_log("sleep %d seconds to capture" % (start_sleep))
 time.sleep(start_sleep)
+
 
 while True:
     (valid, count_down, master, slave) = htc_utility.do_cycle()
     if not valid:
-        if count_down <= 0:
+        if count_down <= 0 and last_count_down <= 0:
             res = list(pyautogui.locateAllOnScreen(htc_constant.EnterPng))
             if len(res) > 0:
                 htc_utility.write_log("has enter, click to enter game, and mouse move to origin")
                 pyautogui.click(htc_constant.EnterClickPos["x"], htc_constant.EnterClickPos["y"])
                 pyautogui.moveTo(10, 500)
+        last_count_down = count_down
         continue
+
 
     htc_utility.write_log("count down=%d satisfy, master=%f, slave=%f, come to comput buy option" % (count_down, master, slave))
     buy_option = ''
@@ -39,14 +43,14 @@ while True:
     #     write_log("amount bet=%f %f invalid, diff to large, ignore this" % (data[0], data[1]))
     #     continue
 
-    if diff > 0:
-        per = diff * 100 / master;
-        if per > max_diff_per:
-            buy_option = 'slave'
-    if diff < 0:
-        per = diff * 100 / slave
-        if per < -max_diff_per:
-            buy_option = 'master'
+    if diff > 30000:
+        # per = diff * 100 / master;
+        # if per > max_diff_per:
+        buy_option = 'slave'
+    if diff < -30000:
+        # per = diff * 100 / slave
+        # if per < -max_diff_per:
+        buy_option = 'master'
 
     # if diff > 0:
     #     per = diff * 100 / AmountBetPos["master"];
@@ -108,6 +112,7 @@ while True:
         "set_slave": slave,
         "actual_master": final_master,
         "actual_slave": final_slave,
+        "last_account_value": htc_constant.last_account_value,
         "account_value": account_value
     }
     (code, id) = htc_utility.insert_coco_item(req)
@@ -115,6 +120,7 @@ while True:
         htc_utility.write_log("insert info mysql failed")
     else:
         htc_utility.write_log("insert into mysql success, id=%d" % (id))
+    htc_constant.last_account_value = account_value
 
 
     # tt = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))

@@ -348,6 +348,11 @@ def do_cycle():
     source = "./imgs/whole_%s.png" % (tt)
     im = pyautogui.screenshot(source)
     count_down = deal_count_down(source)
+    # if need parse account value
+    if count_down > 0 and htc_constant.last_account_value == -1:
+        write_log("first to parse account_value...")
+        htc_constant.last_account_value = deal_account_value(source)
+        write_log("first account value=%d" % (htc_constant.last_account_value))
 
     # check if need buy
     if count_down > htc_constant.min_count_down or count_down < 0:
@@ -373,13 +378,24 @@ def get_final_master_slave():
 
 coco_mysql = MysqlClient("127.0.0.1", 3306, "root", "test", "htc_coco", "utf8")
 def insert_coco_item(req):
+    state = 0
+    diff = req["account_value"] - req["last_account_value"]
+    if diff > 0:
+        state = 1
+    elif diff < 0:
+        state = -1
+
+    write_log("insert into mysql, buy_option=%s, set_diff=%d, actual_diff=%d, state=%d, last_account_value=%d, account_value=%d" % (
+        req["buy_option"], req["set_master"] - req["set_slave"], req["actual_master"] - req["actual_slave"], state, req["last_account_value"], req["account_value"])
+              )
+
     (code, rows_affected, id) = coco_mysql.execute(
         "insert into analysis" \
-        "(create_time, buy_option, set_master, set_slave, actual_master, actual_slave, account_value) " \
-        "values(%s, %s, %s, %s, %s, %s, %s)",
+        "(create_time, buy_option, set_diff, set_master, set_slave, actual_diff, actual_master, actual_slave, state, last_account_value, account_value) " \
+        "values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         (
-            int(time.time()), req["buy_option"], req["set_master"], req["set_slave"], req["actual_master"],
-            req["actual_slave"], req["account_value"]
+            int(time.time()), req["buy_option"], req["set_master"] - req["set_slave"], req["set_master"], req["set_slave"], req["actual_master"] - req["actual_slave"],
+            req["actual_master"], req["actual_slave"], state, req["last_account_value"], req["account_value"]
         ), get_inserted_id=True
     );
     if code != 0:

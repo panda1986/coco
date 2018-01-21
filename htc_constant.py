@@ -120,8 +120,8 @@ class Constants:
             "y": 945
         },
         "EnterClickPos": {
-            "x": 965,
-            "y": 1115
+            "x": 988,
+            "y": 624
         },
         "EnterPng": "enter_imac.png",
         "AccountValuePos": {
@@ -134,6 +134,7 @@ class Constants:
     }
 
 min_count_down = 5
+last_account_value = -1
 
 sc = Constants.Screen15Config
 screenWidth, screenHeight = pyautogui.size()
