@@ -17,17 +17,18 @@ else:
             item["last_account_value"] = items[i -1]["account_value"]
 
         item["state"] = 0
-        diff = item["account_value"] - item["last_account_value"]
-        if diff > 0:
-            item["state"] = 1
-        else:
-            item["state"] = -1
+        if item["buy_option"] != "":
+            diff = item["account_value"] - item["last_account_value"]
+            if diff > 0:
+                item["state"] = 1
+            else:
+                item["state"] = -1
 
         item["set_diff"] = item["set_master"] - item["set_slave"]
         item["actual_diff"] = item["actual_master"] - item["actual_slave"]
 
         htc_utility.update_item(item)
-        print ("update id=%d, last_account=%d, account=%d, state=%d, set_diff=%d, actual_diff=%d" % (
-            item["id"], item["last_account_value"], item["account_value"], item["state"],
+        print ("update id=%d, buy_option=%s, last_account=%d, account=%d, state=%d, set_diff=%d, actual_diff=%d" % (
+            item["id"], item["buy_option"], item["last_account_value"], item["account_value"], item["state"],
             item["set_diff"], item["actual_diff"]))
 
