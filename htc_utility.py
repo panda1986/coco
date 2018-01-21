@@ -404,3 +404,4 @@ def insert_coco_item(req):
 
     assert (id > 0);
     return (error_success, id);
+

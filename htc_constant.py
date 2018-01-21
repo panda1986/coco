@@ -3,6 +3,11 @@
 import pyautogui
 
 class Constants:
+    max_diff_per = 35
+    positive_max_per = 30
+    positive_min_per = 5
+    strategy_full_min_diff = 30000
+
     Screen15Config = {
         "CountDownPos": {
             "x": 130 * 2,
@@ -133,6 +138,41 @@ class Constants:
         }
     }
 
+def strategy_full(master, slave):
+    diff = master - slave
+    if diff > Constants.strategy_full_min_diff:
+        return 'slave'
+    if diff < -Constants.strategy_full_min_diff:
+        return 'master'
+    return ''
+
+
+def strategy_positive(master, slave):
+    diff = master - slave
+    if diff > 0:
+        per = diff * 100 / master
+        if per > Constants.max_diff_per:
+            return'slave'
+    if diff < 0:
+        per = diff * 100 / slave
+        if per < -Constants.max_diff_per:
+            return 'master'
+    return ''
+
+
+def strategy_negative(master, slave):
+    diff = master - slave
+    if diff > 0:
+        per = diff * 100 / master;
+        if per <= Constants.positive_max_per and per >= Constants.positive_min_per:
+            return 'master'
+    if diff < 0:
+        per = -diff * 100 / slave
+        if per <= Constants.positive_max_per and per >= Constants.positive_min_per:
+            return 'slave'
+    return ''
+
+
 min_count_down = 5
 last_account_value = -1
 
@@ -151,5 +191,7 @@ ConfirmClickPos = sc["ConfirmClickPos"]
 EnterClickPos = sc["EnterClickPos"]
 EnterPng = sc["EnterPng"]
 AccountValuePos = sc["AccountValuePos"]
+
+
 
 
