@@ -405,3 +405,38 @@ def insert_coco_item(req):
     assert (id > 0);
     return (error_success, id);
 
+def items_all():
+    (code, rows_affected, result) = coco_mysql.execute("select * from analysis order by id asc");
+    if code != 0:
+        print ("get items failed. code=%d" % (code));
+        return (code, None);
+
+    items = [];
+    for row in result:
+        items.append({
+            "id": row["id"],
+            "create_time": row["create_time"],
+            "buy_option": row["buy_option"],
+            "set_diff": row["set_diff"],
+            "set_master": row["set_master"],
+            "set_slave": row["set_slave"],
+            "actual_diff": row["actual_diff"],
+            "actual_master": row["actual_master"],
+            "actual_slave": row["actual_slave"],
+            "state": row["state"],
+            "last_account_value": row["last_account_value"],
+            "account_value": row["account_value"],
+        });
+    return (0, items)
+
+def updae_item(req):
+    (code, rows_affected, result) = coco_mysql.execute(
+        "update analysis set set_diff=%d, actual_diff=%d, state=%d, last_account_value=%d  where id=%d",
+        (req["set_diff"], req["actual_diff"], req["state"], req["last_account_value"], id)
+    );
+    if code != 0:
+        print ("update item failed, code=%d"%(code))
+        return code;
+
+    return 0;
+
