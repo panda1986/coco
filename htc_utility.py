@@ -429,10 +429,10 @@ def items_all():
         });
     return (0, items)
 
-def updae_item(req):
+def update_item(req):
     (code, rows_affected, result) = coco_mysql.execute(
-        "update analysis set set_diff=%d, actual_diff=%d, state=%d, last_account_value=%d  where id=%d",
-        (req["set_diff"], req["actual_diff"], req["state"], req["last_account_value"], id)
+        "update analysis set set_diff=%s, actual_diff=%s, state=%s, last_account_value=%s  where id=%s",
+        (req["set_diff"], req["actual_diff"], req["state"], req["last_account_value"], req["id"])
     );
     if code != 0:
         print ("update item failed, code=%d"%(code))
