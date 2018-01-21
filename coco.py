@@ -78,6 +78,7 @@ while True:
             htc_utility.write_log("get account value=%d" % (account_value))
         else:
             htc_utility.write_log("get account failed, value=%d" % (account_value))
+            account_value = 0
         # snap, get count_down, if count_down > 0; get account_value;break
         # get account value
         break
