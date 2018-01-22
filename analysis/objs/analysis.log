@@ -1,4 +1,0 @@
-[app][trace] 2018/01/20 11:55:58 [utility.go] [core.StartReload.func1:40] : wait for reload signals: kill -1 23941
-[app][trace] 2018/01/20 11:55:58 [config.go] [core.(*Config).Initialize:243] : apply nb_cpus 4
-[app][trace] 2018/01/20 11:55:58 [main.go] [main.run.func2:65] : apply listen:6300
-[app][trace] 2018/01/20 11:55:58 [main.go] [main.run.func2:82] : listen at:0.0.0.0:6300

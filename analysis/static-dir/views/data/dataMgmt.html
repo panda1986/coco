@@ -1,0 +1,73 @@
+<div class="g-mn1c" ng-controller="dataMgmtCtrl">
+    <div class="m-crumb f-fs1">历史数据</div>
+    <div class="m-op f-cb">
+        <div class="pull-left marL30">
+            <p class="input-group vms_datepicker">
+                <input type="text" class="h28 form-control blss_input" uib-datepicker-popup ng-model="start_dt"
+                       is-open="status.start_opened" datepicker-options="dateOptions" ng-required="true"
+                       close-text="关闭"
+                       current-text="今天" readOnly="true"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open_datepicker('start')">
+                        <i class="vms_datepicker_icon"></i>
+                    </button>
+                </span>
+            </p>
+        </div>
+        <div class="pull-left marT5 marL5">——</div>
+        <div class="pull-left marL5">
+            <p class="input-group vms_datepicker">
+                <input type="text" class="h28 form-control blss_input" uib-datepicker-popup ng-model="end_dt"
+                       is-open="status.end_opened" datepicker-options="dateOptions" ng-required="true"
+                       close-text="关闭"
+                       current-text="今天" readOnly="true"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open_datepicker('end')">
+                        <i class="vms_datepicker_icon"></i>
+                    </button>
+                </span>
+            </p>
+        </div>
+
+        <div class="pull-left marL5">
+            <label class="pull-left control-label pad0">下注额差值区间：</label>
+            <div class="pull-left w120 pad0">
+                <input type="number" ng-model="actual_diff.start" class="form-control" placeholder="下注额差值起始">
+                <input type="number" ng-model="actual_diff.end" class="form-control" placeholder="下注额差值结束">
+            </div>
+        </div>
+
+        <div class="pull-left marL5">
+            <label class="pull-left control-label pad0">下注：</label>
+            <div class="pull-left pad0">
+                <select class="form-control" ng-model="buy_option">
+                    <option value="">全部</option>
+                    <option value="empty">未下注</option>
+                    <option value="not_empty">已下注</option>
+                    <option value="master">庄</option>
+                    <option value="slave">闲</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="pull-left btn btn-primary marL10 u-btn" type="button" ng-click="Search()">查询</button>
+        <button class="pull-right btn btn-warning marL10 u-btn" type="button" ng-click="clear()">清理</button>
+    </div>
+    <div class="row f-mb2">
+        <p class="f-ml34 f-mt1">
+            <span>共{{result.total}}局, 赢{{result.win}}局, 输{{result.lose}}局, 平{{result.idiot}}局, 未识别下注额{{result.invalid}}局, 金额出错{{result.error}}局</span>
+        </p>
+        <p class="f-ml34 f-mt1">
+            <span>boss 赢{{result.boss_win_money| RMB}} RMB, 输{{result.boss_lose_money| RMB}} RMB</span>
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-1 col-sm-9 col-md-10">
+            <div class="row well well-sm">
+                <div id="echart_bd_account" class="mini-sm-layout"></div>
+                <div id="echart_bd_diff" class="mini-sm-layout"></div>
+                <div id="echart_bd_state" class="mini-sm-layout"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -23,12 +23,15 @@ func (v *BravoError) Error() string {
 }
 
 const (
+    MaxActualDiff = 1000000
     ErrorSuccess = 0
 
     ErrorMysqlExecFailed = 104
+    ErrorMaxErrorDiffToLittle = 105
 )
 
 var CodeMsgZH = map[int]string{
     ErrorSuccess:         "成功",
     ErrorMysqlExecFailed: "执行sql语句失败",
+    ErrorMaxErrorDiffToLittle: "清理差值太小",
 }

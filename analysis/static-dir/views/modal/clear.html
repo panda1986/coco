@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"><span>×</span></button>
+    <h4 class="modal-title">清理异常数据</h4>
+    <p>将清理小于最大下注额的数据</p>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal marT5" role="form">
+        <div class="form-group">
+            <label class="col-sm-5 control-label">最大下注额差值：</label>
+            <div class="col-sm-6">
+                <input type="number" class="form-control" ng-model="max_actual_diff">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary u-btn f-c3" ng-click="ok()">确定</button>
+    <button type="button" class="btn btn-primary u-btn f-c3" ng-click="cancel()">取消</button>
+</div>
