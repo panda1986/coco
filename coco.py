@@ -33,9 +33,13 @@ while True:
 
     htc_utility.write_log("count down=%d satisfy, master=%f, slave=%f, come to comput buy option" % (count_down, master, slave))
     if htc_constant.screenWidth == 2048:
-        buy_option = htc_constant.strategy_full(master, slave)
+        (diff, per, buy_option) = htc_constant.strategy_full(master, slave)
+        htc_utility.write_log("imac positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+        master, slave, diff, per, buy_option))
     else:
-        buy_option = htc_constant.strategy_positive(master, slave)
+        (diff, per, buy_option) = htc_constant.strategy_positive(master, slave)
+        htc_utility.write_log("mac15 positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+        master, slave, diff, per, buy_option))
 
     if buy_option == 'master':
         pyautogui.click(htc_constant.MasterClickPos["x"], htc_constant.MasterClickPos["y"])

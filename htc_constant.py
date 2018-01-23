@@ -4,7 +4,7 @@ import pyautogui
 
 class Constants:
     max_diff_per = 35
-    positive_max_per = 30
+    positive_max_per = 25
     positive_min_per = 5
     strategy_full_min_diff = 30000
 
@@ -139,38 +139,44 @@ class Constants:
     }
 
 def strategy_full(master, slave):
+    per = 0
+    option = ''
     diff = master - slave
     if diff > Constants.strategy_full_min_diff:
-        return 'slave'
+        option = 'slave'
     if diff < -Constants.strategy_full_min_diff:
-        return 'master'
-    return ''
+        option = 'master'
+    return (diff, per, option)
 
 
 def strategy_positive(master, slave):
     diff = master - slave
+    per = 0
+    option = ''
     if diff > 0:
         per = diff * 100 / master
         if per > Constants.max_diff_per:
-            return'slave'
+            option = 'slave'
     if diff < 0:
         per = diff * 100 / slave
         if per < -Constants.max_diff_per:
-            return 'master'
-    return ''
+            option = 'master'
+    return (diff, per, option)
 
 
 def strategy_negative(master, slave):
     diff = master - slave
+    per = 0
+    option = ''
     if diff > 0:
         per = diff * 100 / master;
         if per <= Constants.positive_max_per and per >= Constants.positive_min_per:
-            return 'master'
+            option = 'master'
     if diff < 0:
         per = -diff * 100 / slave
         if per <= Constants.positive_max_per and per >= Constants.positive_min_per:
-            return 'slave'
-    return ''
+            option = 'slave'
+    return (diff, per, option)
 
 
 min_count_down = 5
