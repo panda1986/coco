@@ -316,7 +316,8 @@ def deal_account_value(source, tt):
         clear(source, "", "", "")
         return account_value
 
-    htc_constant.AccountValuePos["pngName"] = "%s_%s" % (tt, htc_constant.AccountValuePos["pngName"])
+    segs = ["imgs", "account.png"]
+    htc_constant.AccountValuePos["pngName"] = "%s/%s_%s" % (segs[0], tt, segs[1])
     middle, final = deal_img(htc_constant.AccountValuePos["pngName"])
     clear_single_png(source)
     clear_single_png(htc_constant.AccountValuePos["pngName"])
