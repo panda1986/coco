@@ -63,8 +63,7 @@ while True:
     now = 0
     while True:
         now = time.time()
-        tt = time.localtime(time.time())
-        tt_str = time.strftime('%Y%m%d%H%M%S', now)
+        tt_str = time.strftime('%Y%m%d%H%M%S', time.localtime(now))
         source = "./imgs/whole_%s.png" % (tt_str)
         im = pyautogui.screenshot(source)
         count_down = htc_utility.deal_count_down(source)
