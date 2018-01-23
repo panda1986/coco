@@ -310,14 +310,14 @@ def deal_count_down(source):
 
 def deal_account_value(source, tt):
     account_value = -1
+    segs = ["imgs", "account.png"]
+    htc_constant.AccountValuePos["pngName"] = "%s/%s_%s" % (segs[0], tt, segs[1])
     code = convert(htc_constant.AccountValuePos, source)
     if code != error_success:
         write_log("convert crop account failed, loop continue")
         clear(source, "", "", "")
         return account_value
 
-    segs = ["imgs", "account.png"]
-    htc_constant.AccountValuePos["pngName"] = "%s/%s_%s" % (segs[0], tt, segs[1])
     middle, final = deal_img(htc_constant.AccountValuePos["pngName"])
     clear_single_png(source)
     clear_single_png(htc_constant.AccountValuePos["pngName"])
