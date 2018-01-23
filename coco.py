@@ -56,9 +56,12 @@ while True:
 
     time.sleep(3)
     account_value = -1
+    now = 0
     while True:
-        tt = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        source = "./imgs/whole_%s.png" % (tt)
+        now = time.time()
+        tt = time.localtime(time.time())
+        tt_str = time.strftime('%Y%m%d%H%M%S', now)
+        source = "./imgs/whole_%s.png" % (tt_str)
         im = pyautogui.screenshot(source)
         count_down = htc_utility.deal_count_down(source)
         if count_down <= 0:
@@ -72,15 +75,13 @@ while True:
             continue
 
         htc_utility.write_log("next count down=%d, come to get account value, and insert into sql" % (count_down))
-        account_value = htc_utility.deal_account_value(source)
+        account_value = htc_utility.deal_account_value(source, tt_str)
         htc_utility.clear_single_png(htc_constant.CountDownPos["pngName"])
         if account_value >= 0:
             htc_utility.write_log("get account value=%d" % (account_value))
         else:
             htc_utility.write_log("get account failed, value=%d" % (account_value))
             account_value = 0
-        # snap, get count_down, if count_down > 0; get account_value;break
-        # get account value
         break
 
     req = {
@@ -92,7 +93,7 @@ while True:
         "last_account_value": htc_constant.last_account_value,
         "account_value": account_value
     }
-    (code, id) = htc_utility.insert_coco_item(req)
+    (code, id) = htc_utility.insert_coco_item(req, now)
     if code != htc_utility.error_success:
         htc_utility.write_log("insert info mysql failed")
     else:

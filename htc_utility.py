@@ -308,7 +308,7 @@ def deal_count_down(source):
     finally:
         return count_down
 
-def deal_account_value(source):
+def deal_account_value(source, tt):
     account_value = -1
     code = convert(htc_constant.AccountValuePos, source)
     if code != error_success:
@@ -316,6 +316,7 @@ def deal_account_value(source):
         clear(source, "", "", "")
         return account_value
 
+    htc_constant.AccountValuePos["pngName"] = "%s_%s" % (tt, htc_constant.AccountValuePos["pngName"])
     middle, final = deal_img(htc_constant.AccountValuePos["pngName"])
     clear_single_png(source)
     clear_single_png(htc_constant.AccountValuePos["pngName"])
@@ -330,8 +331,10 @@ def deal_account_value(source):
     except Exception, ex:
         write_log("parse account value text to int failed, exception, ex=%s, stack=%s, loop continue" % (
         ex, traceback.format_exc()))
-        return -1
+        account_value = -1
     finally:
+        if account_value > 0:
+            clear_single_png(final)
         return account_value
 
 # check if valid,
@@ -351,7 +354,7 @@ def do_cycle():
     # if need parse account value
     if count_down > 0 and htc_constant.last_account_value == -1:
         write_log("first to parse account_value...")
-        htc_constant.last_account_value = deal_account_value(source)
+        htc_constant.last_account_value = deal_account_value(source, tt)
         write_log("first account value=%d" % (htc_constant.last_account_value))
 
     # check if need buy
@@ -377,7 +380,7 @@ def get_final_master_slave():
 
 
 coco_mysql = MysqlClient("127.0.0.1", 3306, "root", "test", "htc_coco", "utf8")
-def insert_coco_item(req):
+def insert_coco_item(req, tt):
     state = 0
     diff = req["account_value"] - req["last_account_value"]
     if diff > 0:
@@ -394,7 +397,7 @@ def insert_coco_item(req):
         "(create_time, buy_option, set_diff, set_master, set_slave, actual_diff, actual_master, actual_slave, state, last_account_value, account_value) " \
         "values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         (
-            int(time.time()), req["buy_option"], req["set_master"] - req["set_slave"], req["set_master"], req["set_slave"], req["actual_master"] - req["actual_slave"],
+            int(tt), req["buy_option"], req["set_master"] - req["set_slave"], req["set_master"], req["set_slave"], req["actual_master"] - req["actual_slave"],
             req["actual_master"], req["actual_slave"], state, req["last_account_value"], req["account_value"]
         ), get_inserted_id=True
     );
