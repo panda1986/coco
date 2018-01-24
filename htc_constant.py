@@ -45,9 +45,9 @@ class Constants:
         "EnterPng": "enter.png",
         "AccountValuePos": { #需计算
             "x": 1297 * 2,
-            "y":110 * 2,
-            "w": 134 * 2,
-            "h":24 * 2,
+            "y":108 * 2,
+            "w": 115 * 2,
+            "h":21 * 2,
             "pngName": "imgs/account.png",
         }
     }
