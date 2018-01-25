@@ -30,11 +30,13 @@ while True:
                 pyautogui.moveTo(10, 500)
             else:
                 enter_png_continue_failed_count += 1
+                htc_utility.write_log("check enter png failed, continue failed count=%d" % (enter_png_continue_failed_count))
 
             if enter_png_continue_failed_count > max_enter_png_failed_count:
                 htc_utility.write_log("enter png continue failed count=%d, click refresh" % (enter_png_continue_failed_count))
                 pyautogui.click(htc_constant.RefreshPos["x"], htc_constant.RefreshPos["y"])
                 pyautogui.moveTo(10, 500)
+                enter_png_continue_failed_count = 0
 
         last_count_down = count_down
         continue
@@ -86,11 +88,13 @@ while True:
                 pyautogui.moveTo(10, 500)
             else:
                 enter_png_continue_failed_count += 1
+                htc_utility.write_log("check enter png failed, continue failed count=%d" % (enter_png_continue_failed_count))
 
             if enter_png_continue_failed_count > max_enter_png_failed_count:
                 htc_utility.write_log("enter png continue failed count=%d, click refresh" % (enter_png_continue_failed_count))
                 pyautogui.click(htc_constant.RefreshPos["x"], htc_constant.RefreshPos["y"])
                 pyautogui.moveTo(10, 500)
+                enter_png_continue_failed_count = 0
             continue
 
         htc_utility.write_log("next count down=%d, come to get account value, and insert into sql" % (count_down))
