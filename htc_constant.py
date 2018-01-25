@@ -10,8 +10,8 @@ class Constants:
 
     Screen15Config = {
         "RefreshPos": {
-            "x": 76 * 2,
-            "y": 57 * 2
+            "x": 76,
+            "y": 57
         },
         "CountDownPos": {
             "x": 130 * 2,
@@ -57,8 +57,8 @@ class Constants:
     }
     Screen13Config = {
         "RefreshPos": { #need to re comput
-            "x": 76 * 2,
-            "y": 57 * 2
+            "x": 76,
+            "y": 57
         },
         "CountDownPos": {
             "x": 130 * 2,
@@ -104,8 +104,8 @@ class Constants:
     }
     ScreenImacConfig = {
         "RefreshPos": { #need to re comput
-            "x": 76 * 2,
-            "y": 57 * 2
+            "x": 76,
+            "y": 57
         },
         "CountDownPos": {
             "x": 236 * 2,
