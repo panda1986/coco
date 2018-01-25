@@ -28,6 +28,7 @@ while True:
                 htc_utility.write_log("has enter, click to enter game, and mouse move to origin")
                 pyautogui.click(htc_constant.EnterClickPos["x"], htc_constant.EnterClickPos["y"])
                 pyautogui.moveTo(10, 500)
+                enter_png_continue_failed_count = 0
             else:
                 enter_png_continue_failed_count += 1
                 htc_utility.write_log("check enter png failed, continue failed count=%d" % (enter_png_continue_failed_count))
@@ -41,7 +42,7 @@ while True:
         last_count_down = count_down
         continue
 
-
+    enter_png_continue_failed_count = 0
     htc_utility.write_log("count down=%d satisfy, master=%f, slave=%f, come to comput buy option" % (count_down, master, slave))
     if htc_constant.screenWidth == 2048:
         (diff, per, buy_option) = htc_constant.strategy_full(master, slave)
@@ -86,6 +87,7 @@ while True:
                 htc_utility.write_log("has enter, click to enter game, and mouse move to origin")
                 pyautogui.click(htc_constant.EnterClickPos["x"], htc_constant.EnterClickPos["y"])
                 pyautogui.moveTo(10, 500)
+                enter_png_continue_failed_count = 0
             else:
                 enter_png_continue_failed_count += 1
                 htc_utility.write_log("check enter png failed, continue failed count=%d" % (enter_png_continue_failed_count))
