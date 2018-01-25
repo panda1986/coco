@@ -9,6 +9,10 @@ class Constants:
     strategy_full_min_diff = 30000
 
     Screen15Config = {
+        "RefreshPos": {
+            "x": 57 * 2,
+            "y": 60 * 2
+        },
         "CountDownPos": {
             "x": 130 * 2,
             "y":105 * 2,
@@ -52,6 +56,10 @@ class Constants:
         }
     }
     Screen13Config = {
+        "RefreshPos": { #need to re comput
+            "x": 57 * 2,
+            "y": 60 * 2
+        },
         "CountDownPos": {
             "x": 130 * 2,
             "y":120 * 2,
@@ -95,6 +103,10 @@ class Constants:
         }
     }
     ScreenImacConfig = {
+        "RefreshPos": { #need to re comput
+            "x": 57 * 2,
+            "y": 60 * 2
+        },
         "CountDownPos": {
             "x": 236 * 2,
             "y":109 * 2,
@@ -189,6 +201,7 @@ if screenWidth == 1280:
 elif screenWidth == 2048:
     sc = Constants.ScreenImacConfig
 
+RefreshPos = sc["RefreshPos"]
 CountDownPos = sc["CountDownPos"]
 AmountBetPos = sc["AmountBetPos"]
 MasterClickPos = sc["MasterClickPos"]

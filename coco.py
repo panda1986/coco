@@ -17,7 +17,8 @@ last_count_down = -1
 htc_utility.write_log("sleep %d seconds to capture" % (start_sleep))
 time.sleep(start_sleep)
 
-
+enter_png_continue_failed_count = 0
+max_enter_png_failed_count = 10
 while True:
     (valid, count_down, master, slave) = htc_utility.do_cycle()
     if not valid:
@@ -27,6 +28,14 @@ while True:
                 htc_utility.write_log("has enter, click to enter game, and mouse move to origin")
                 pyautogui.click(htc_constant.EnterClickPos["x"], htc_constant.EnterClickPos["y"])
                 pyautogui.moveTo(10, 500)
+            else:
+                enter_png_continue_failed_count += 1
+
+            if enter_png_continue_failed_count > max_enter_png_failed_count:
+                htc_utility.write_log("enter png continue failed count=%d, click refresh" % (enter_png_continue_failed_count))
+                pyautogui.click(htc_constant.RefreshPos["x"], htc_constant.RefreshPos["y"])
+                pyautogui.moveTo(10, 500)
+
         last_count_down = count_down
         continue
 
@@ -74,6 +83,13 @@ while True:
             if len(res) > 0:
                 htc_utility.write_log("has enter, click to enter game, and mouse move to origin")
                 pyautogui.click(htc_constant.EnterClickPos["x"], htc_constant.EnterClickPos["y"])
+                pyautogui.moveTo(10, 500)
+            else:
+                enter_png_continue_failed_count += 1
+
+            if enter_png_continue_failed_count > max_enter_png_failed_count:
+                htc_utility.write_log("enter png continue failed count=%d, click refresh" % (enter_png_continue_failed_count))
+                pyautogui.click(htc_constant.RefreshPos["x"], htc_constant.RefreshPos["y"])
                 pyautogui.moveTo(10, 500)
             continue
 
