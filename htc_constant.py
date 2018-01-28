@@ -8,7 +8,7 @@ class Constants:
     positive_min_per = 5
     strategy_full_min_diff = 30000
     negative_max_value = 200000
-    negative_min_value = 30000
+    negative_min_value = 50000
 
     Screen15Config = {
         "200buttonPos": {
