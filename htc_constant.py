@@ -9,6 +9,14 @@ class Constants:
     strategy_full_min_diff = 30000
 
     Screen15Config = {
+        "200buttonPos": {
+            "x": 1406,
+            "y": 858
+        },
+        "1000buttonPos": {
+            "x": 1563,
+            "y": 849
+        },
         "RefreshPos": {
             "x": 76,
             "y": 57
@@ -56,6 +64,14 @@ class Constants:
         }
     }
     Screen13Config = {
+        "200buttonPos": {
+            "x": 1406,
+            "y": 858
+        },
+        "1000buttonPos": {
+            "x": 1563,
+            "y": 849
+        },
         "RefreshPos": { #need to re comput
             "x": 76,
             "y": 57
@@ -103,6 +119,14 @@ class Constants:
         }
     }
     ScreenImacConfig = {
+        "200buttonPos": {
+            "x": 1406,
+            "y": 858
+        },
+        "1000buttonPos": {
+            "x": 1563,
+            "y": 849
+        },
         "RefreshPos": { #need to re comput
             "x": 76,
             "y": 57
@@ -191,7 +215,7 @@ def strategy_negative(master, slave):
     return (diff, per, option)
 
 
-min_count_down = 5
+min_count_down = 6
 last_account_value = -1
 
 sc = Constants.Screen15Config
@@ -210,6 +234,7 @@ ConfirmClickPos = sc["ConfirmClickPos"]
 EnterClickPos = sc["EnterClickPos"]
 EnterPng = sc["EnterPng"]
 AccountValuePos = sc["AccountValuePos"]
+ButtonLevelPos = sc["1000buttonPos"]
 
 
 

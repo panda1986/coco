@@ -45,7 +45,7 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
         var get_data = function () {
             var query = "?start_time=" + parseInt(Number($scope.start_dt) / 1000) + "&end_time=" + parseInt(Number($scope.end_dt) / 1000);
             if ($scope.actual_diff.start != 0 || $scope.actual_diff.end != 0) {
-                query += "&actual_diff_start=" + $scope.actual_diff.start + "&actual_diff_end=" + $scope.actual_diff.end;
+                query += "&set_diff_start=" + $scope.actual_diff.start + "&set_diff_end=" + $scope.actual_diff.end;
             }
             if ($scope.buy_option.length > 0) {
                 query += "&buy_option=" + $scope.buy_option;
