@@ -8,6 +8,7 @@ class Constants:
     positive_min_per = 5
     strategy_full_min_diff = 30000
     negative_max_value = 200000
+    negative_min_value = 30000
 
     Screen15Config = {
         "200buttonPos": {
@@ -205,10 +206,10 @@ def strategy_negative_value(master, slave):
     diff = master - slave
     option = ''
     if diff > 0:
-        if diff < Constants.negative_max_value:
+        if Constants.negative_min_value < diff and diff < Constants.negative_max_value:
             option = 'master'
     if diff < 0:
-        if diff > -Constants.negative_max_value:
+        if diff > -Constants.negative_max_value and diff < -Constants.negative_min_value:
             option = 'slave'
     return (diff, option)
 
@@ -247,7 +248,7 @@ ConfirmClickPos = sc["ConfirmClickPos"]
 EnterClickPos = sc["EnterClickPos"]
 EnterPng = sc["EnterPng"]
 AccountValuePos = sc["AccountValuePos"]
-ButtonLevelPos = sc["1000buttonPos"]
+ButtonLevelPos = sc["200buttonPos"]
 
 
 
