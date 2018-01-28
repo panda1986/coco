@@ -194,24 +194,18 @@ def strategy_positive(master, slave):
     if diff > 0:
         per = diff * 100 / master
         if per > Constants.max_diff_per:
-            option = 'slave'
+            if diff > Constants.negative_min_value and diff < Constants.negative_max_value:
+                option = 'master'
+            else:
+                option = 'slave'
     if diff < 0:
         per = diff * 100 / slave
         if per < -Constants.max_diff_per:
-            option = 'master'
+            if diff > -Constants.negative_max_value and diff < -Constants.negative_min_value:
+                option = 'slave'
+            else:
+                option = 'master'
     return (diff, per, option)
-
-
-def strategy_negative_value(master, slave):
-    diff = master - slave
-    option = ''
-    if diff > 0:
-        if diff > Constants.negative_min_value and diff < Constants.negative_max_value:
-            option = 'master'
-    if diff < 0:
-        if diff > -Constants.negative_max_value and diff < -Constants.negative_min_value:
-            option = 'slave'
-    return (diff, option)
 
 
 def strategy_negative(master, slave):

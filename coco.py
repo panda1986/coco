@@ -49,15 +49,9 @@ while True:
         htc_utility.write_log("imac positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
         master, slave, diff, per, buy_option))
     else:
-        (diff, buy_option) = htc_constant.strategy_negative_value(master, slave)
-        if buy_option == "":
-            (diff, per, buy_option) = htc_constant.strategy_positive(master, slave)
-            htc_utility.write_log("mac15 positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
-            master, slave, diff, per, buy_option))
-        else:
-            htc_utility.write_log("mac15 negative value strategy, master=%f, slave=%f, diff=%f, option=%s" % (
-                master, slave, diff, buy_option
-            ))
+        (diff, per, buy_option) = htc_constant.strategy_positive(master, slave)
+        htc_utility.write_log("mac15 positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+        master, slave, diff, per, buy_option))
 
     if buy_option == 'master':
         pyautogui.click(htc_constant.ButtonLevelPos["x"], htc_constant.ButtonLevelPos["y"])
