@@ -55,8 +55,8 @@ while True:
             htc_utility.write_log("mac15 positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
             master, slave, diff, per, buy_option))
         else:
-            htc_utility.write_log("mac15 negative value strategy, master=%f, slave=%f, option=%s" % (
-                master, slave, buy_option
+            htc_utility.write_log("mac15 negative value strategy, master=%f, slave=%f, diff=%f, option=%s" % (
+                master, slave, diff, buy_option
             ))
 
     if buy_option == 'master':

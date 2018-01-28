@@ -8,7 +8,7 @@ class Constants:
     positive_min_per = 5
     strategy_full_min_diff = 30000
     negative_max_value = 200000
-    negative_min_value = 50000
+    negative_min_value = 0
 
     Screen15Config = {
         "200buttonPos": {
@@ -206,7 +206,7 @@ def strategy_negative_value(master, slave):
     diff = master - slave
     option = ''
     if diff > 0:
-        if Constants.negative_min_value < diff and diff < Constants.negative_max_value:
+        if diff > Constants.negative_min_value and diff < Constants.negative_max_value:
             option = 'master'
     if diff < 0:
         if diff > -Constants.negative_max_value and diff < -Constants.negative_min_value:
