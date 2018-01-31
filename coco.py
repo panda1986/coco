@@ -26,6 +26,7 @@ while True:
             res = list(pyautogui.locateAllOnScreen(htc_constant.EnterPng))
             if len(res) > 0:
                 htc_utility.write_log("has enter, click to enter game, and mouse move to origin")
+                pyautogui.click(htc_constant.RoomPos["x"], htc_constant.RoomPos["y"])
                 pyautogui.click(htc_constant.EnterClickPos["x"], htc_constant.EnterClickPos["y"])
                 pyautogui.moveTo(10, 500)
                 enter_png_continue_failed_count = 0
@@ -87,6 +88,7 @@ while True:
             res = list(pyautogui.locateAllOnScreen(htc_constant.EnterPng))
             if len(res) > 0:
                 htc_utility.write_log("has enter, click to enter game, and mouse move to origin")
+                pyautogui.click(htc_constant.RoomPos["x"], htc_constant.RoomPos["y"])
                 pyautogui.click(htc_constant.EnterClickPos["x"], htc_constant.EnterClickPos["y"])
                 pyautogui.moveTo(10, 500)
                 enter_png_continue_failed_count = 0

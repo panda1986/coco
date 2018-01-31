@@ -11,6 +11,10 @@ class Constants:
     negative_min_value = 0
 
     Screen15Config = {
+        "roomPos": {
+            "x": 78,
+            "y": 378
+        },
         "200buttonPos": {
             "x": 1406,
             "y": 858
@@ -66,6 +70,10 @@ class Constants:
         }
     }
     Screen13Config = {
+        "roomPos": {
+            "x": 78,
+            "y": 378
+        },
         "200buttonPos": {
             "x": 1406,
             "y": 858
@@ -121,6 +129,10 @@ class Constants:
         }
     }
     ScreenImacConfig = {
+        "roomPos": {
+            "x": 78,
+            "y": 378
+        },
         "200buttonPos": {
             "x": 1406,
             "y": 858
@@ -233,6 +245,7 @@ if screenWidth == 1280:
 elif screenWidth == 2048:
     sc = Constants.ScreenImacConfig
 
+RoomPos = sc["roomPos"]
 RefreshPos = sc["RefreshPos"]
 CountDownPos = sc["CountDownPos"]
 AmountBetPos = sc["AmountBetPos"]
