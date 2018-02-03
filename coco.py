@@ -56,13 +56,13 @@ while True:
         master, slave, diff, per, buy_option))
 
     if buy_option == 'master':
-        pyautogui.click(htc_constant.ButtonLevelPos["x"], htc_constant.ButtonLevelPos["y"])
+        #pyautogui.click(htc_constant.ButtonLevelPos["x"], htc_constant.ButtonLevelPos["y"])
         pyautogui.click(htc_constant.MasterClickPos["x"], htc_constant.MasterClickPos["y"])
         pyautogui.click(htc_constant.ConfirmClickPos["x"], htc_constant.ConfirmClickPos["y"])
         htc_utility.write_log("set master, amount bet=%f %f, and sleep %d" % (
         master, slave, htc_constant.CountDownPos["result"]))
     elif buy_option == 'slave':
-        pyautogui.click(htc_constant.ButtonLevelPos["x"], htc_constant.ButtonLevelPos["y"])
+        #pyautogui.click(htc_constant.ButtonLevelPos["x"], htc_constant.ButtonLevelPos["y"])
         pyautogui.click(htc_constant.SlaveClickPos["x"], htc_constant.SlaveClickPos["y"])
         pyautogui.click(htc_constant.ConfirmClickPos["x"], htc_constant.ConfirmClickPos["y"])
         htc_utility.write_log("set slave, amount bet=%f %f, and sleep %d" % (master, slave, htc_constant.CountDownPos["result"]))
