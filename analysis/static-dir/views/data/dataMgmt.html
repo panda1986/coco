@@ -14,6 +14,11 @@
                 </span>
             </p>
         </div>
+        <div class="pull-left marT5">
+            <input type="number" style="width: 50px" ng-model="start.hour" placeholder="小时">:
+            <input type="number" style="width: 50px" ng-model="start.min" placeholder="分钟">:
+            <input type="number" style="width: 50px" ng-model="start.sec" placeholder="秒">
+        </div>
         <div class="pull-left marT5 marL5">——</div>
         <div class="pull-left marL5">
             <p class="input-group vms_datepicker">
@@ -28,17 +33,23 @@
                 </span>
             </p>
         </div>
+        <div class="pull-left marT5">
+            <input type="number" style="width: 50px" ng-model="end.hour" placeholder="小时">:
+            <input type="number" style="width: 50px" ng-model="end.min" placeholder="分钟">:
+            <input type="number" style="width: 50px" ng-model="end.sec" placeholder="秒">
+        </div>
+    </div>
 
+    <div class="m-op f-cb">
         <div class="pull-left marL5">
             <label class="pull-left control-label pad0">下注额差值区间：</label>
-            <div class="pull-left w120 pad0">
-                <input type="number" ng-model="actual_diff.start" class="form-control" placeholder="下注额差值起始">
-                <input type="number" ng-model="actual_diff.end" class="form-control" placeholder="下注额差值结束">
-            </div>
+            <input type="number" style="width: 80px" ng-model="actual_diff.start"  placeholder="下注额差值起始">
+            <span>——</span>
+            <input type="number" style="width: 80px" ng-model="actual_diff.end"  placeholder="下注额差值结束">
         </div>
 
-        <div class="pull-left marL5">
-            <label class="pull-left control-label pad0">下注：</label>
+        <div class="pull-left f-ml34">
+            <label class="pull-left control-label pad0">状态：</label>
             <div class="pull-left pad0">
                 <select class="form-control" ng-model="buy_option">
                     <option value="">全部</option>
@@ -50,9 +61,10 @@
             </div>
         </div>
 
-        <button class="pull-left btn btn-primary marL10 u-btn" type="button" ng-click="Search()">查询</button>
-        <button class="pull-right btn btn-warning marL10 u-btn" type="button" ng-click="clear()">清理</button>
+        <button class="pull-left btn btn-primary f-ml34 u-btn" type="button" ng-click="Search()">查询</button>
+        <button class="pull-right btn btn-warning f-ml34 u-btn" type="button" ng-click="clear()">清理</button>
     </div>
+
     <div class="row f-mb2">
         <p class="f-ml34 f-mt1">
             <span>共{{result.total}}局, 赢{{result.win}}局, 输{{result.lose}}局, 平{{result.idiot}}局, 未识别下注额{{result.invalid}}局, 金额出错{{result.error}}局</span>

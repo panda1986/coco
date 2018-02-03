@@ -7,6 +7,16 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
             start: 0,
             end: 0
         };
+        $scope.start = {
+            hour:0,
+            min:0,
+            sec:0
+        };
+        $scope.end = {
+            hour:23,
+            min:59,
+            sec:59
+        };
         $scope.buy_option = 'not_empty';
 
         var analysis_source = function () {
@@ -42,8 +52,35 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
                 }
             }
         };
+        var get_start_timestamp = function () {
+            var date = new Date();
+            date.setTime(Number($scope.start_dt));
+            date.setHours($scope.start.hour);
+            date.setMinutes($scope.start.min);
+            date.setSeconds($scope.start.sec);
+            date.setMilliseconds(0);
+
+            var ts = parseInt(Number(date) / 1000);
+            console.log("start timestamp:", ts, Number(date));
+            return ts;
+        };
+        var get_end_timestamp = function () {
+            var date = new Date();
+            console.log(".....ts", Number($scope.end_dt));
+            date.setTime(Number($scope.end_dt));
+            date.setHours($scope.end.hour);
+            date.setMinutes($scope.end.min);
+            date.setSeconds($scope.end.sec);
+            date.setMilliseconds(0);
+
+            var ts = parseInt(Number(date) / 1000);
+            console.log("end timestamp:", ts, Number(date));
+            return ts;
+
+        };
+
         var get_data = function () {
-            var query = "?start_time=" + parseInt(Number($scope.start_dt) / 1000) + "&end_time=" + parseInt(Number($scope.end_dt) / 1000);
+            var query = "?start_time=" + get_start_timestamp() + "&end_time=" + get_end_timestamp();
             if ($scope.actual_diff.start != 0 || $scope.actual_diff.end != 0) {
                 query += "&set_diff_start=" + $scope.actual_diff.start + "&set_diff_end=" + $scope.actual_diff.end;
             }
