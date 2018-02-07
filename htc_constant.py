@@ -302,7 +302,7 @@ if len(sys.argv) != 2:
     print "请输入启动命令参数：001--mac pro; 002--丰台imac; 003-朱辛庄imac"
     exit(-1)
 host_type = sys.argv[1]
-print "host_type=", host_type, host_type == '000'
+print "host_type=", host_type
 if host_type != panda_mac_type and host_type != macpro_type and host_type != imac_fengtai_type and host_type != imac_zhuxinzhuang_type:
     print "only support 001--mac pro; 002--丰台imac; 003-朱辛庄imac"
     exit(-1)
