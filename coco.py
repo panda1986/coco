@@ -46,14 +46,23 @@ while True:
 
     enter_png_continue_failed_count = 0
     htc_utility.write_log("count down=%d satisfy, master=%f, slave=%f, come to comput buy option" % (count_down, master, slave))
-    if htc_constant.screenWidth == 2048:
+    if htc_constant.host_type == htc_constant.imac_fengtai_type:
         (diff, per, buy_option) = htc_constant.strategy_full(master, slave)
-        htc_utility.write_log("imac positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+        htc_utility.write_log("imac fengtai full strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
         master, slave, diff, per, buy_option))
-    else:
+    elif htc_constant.host_type == htc_constant.macpro_type:
         (diff, per, buy_option) = htc_constant.strategy_positive(master, slave)
         htc_utility.write_log("mac15 positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
         master, slave, diff, per, buy_option))
+    elif htc_constant.host_type == htc_constant.imac_zhuxinzhuang_type:
+        (diff, per, buy_option) = htc_constant.strategy_inflate(master, slave)
+        htc_utility.write_log("imac zhuxinzhuang inflate strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+            master, slave, diff, per, buy_option))
+        if buy_option == '':
+            (diff, per, buy_option) = htc_constant.strategy_positive2(master, slave)
+            htc_utility.write_log(
+                "imac zhuxinzhuang positive2 strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+                    master, slave, diff, per, buy_option))
 
     if buy_option == 'master':
         #pyautogui.click(htc_constant.ButtonLevelPos["x"], htc_constant.ButtonLevelPos["y"])

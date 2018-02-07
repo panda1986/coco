@@ -18,8 +18,10 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
             sec:59
         };
         $scope.buy_option = 'not_empty';
+        $scope.valid_sources = [];
 
         var analysis_source = function () {
+            $scope.valid_sources = [];
             $scope.result = {
                 total: $scope.sources.length,
                 win: 0,
@@ -31,6 +33,7 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
                 boss_lose_money: 0
             };
 
+            var total_win = 0;
             for (var i = 0; i < $scope.sources.length; i ++) {
                 var s = $scope.sources[i];
                 if (s.set_master == 0 || s.set_master == 0) {
@@ -44,12 +47,16 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
                 if (s.state == -1) {
                     $scope.result.lose += 1;
                     $scope.result.boss_lose_money += Math.abs(s.actual_diff)
+                    total_win += -1
                 } else if (s.state == 1) {
                     $scope.result.win += 1;
                     $scope.result.boss_win_money += Math.abs(s.actual_diff)
+                    total_win += 1
                 } else {
                     $scope.result.idiot += 1;
                 }
+                s["total_win"] = total_win;
+                $scope.valid_sources.push(s);
             }
         };
         var get_start_timestamp = function () {
@@ -89,6 +96,7 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
             }
             vacApi.data("" + query, {method: 'GET'}, function (res) {
                 $scope.sources = res.data;
+
                 analysis_source();
 
                 var chart_info = {};
@@ -99,7 +107,7 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
                 chart_info.legends = ["当前余额"];
 
                 var chart_option = {};
-                var option_data = transform_data_to_line_samples($scope.sources, chart_info);
+                var option_data = transform_data_to_line_samples($scope.valid_sources, chart_info);
                 chart_option.option = echart_set_common_line_data(option_data);
                 chart_option.container = document.getElementById('echart_bd_account');
 
@@ -110,7 +118,7 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
                 chart_info.legends = ["下注时差值", "最终差值"];
 
                 var chart_option2 = {};
-                var option_data2 = transform_data_to_line_samples($scope.sources, chart_info);
+                var option_data2 = transform_data_to_line_samples($scope.valid_sources, chart_info);
                 chart_option2.option = echart_set_common_line_data(option_data2);
                 chart_option2.container = document.getElementById('echart_bd_diff');
 
@@ -121,11 +129,22 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
                 chart_info.legends = ["win"];
 
                 var chart_option3 = {};
-                var option_data3 = transform_data_to_line_samples($scope.sources, chart_info);
+                var option_data3 = transform_data_to_line_samples($scope.valid_sources, chart_info);
                 chart_option3.option = echart_set_common_line_data(option_data3);
                 chart_option3.container = document.getElementById('echart_bd_state');
 
-                RenderCharts([chart_option, chart_option2, chart_option3])
+                chart_info.title = "累计获胜局";
+                chart_info.unit = ["total_win"];
+                chart_info.data_type = ["total_win"];
+                chart_info.mark_point = "最高赢局数";
+                chart_info.legends = ["当前赢的局数"];
+
+                var chart_option4 = {};
+                var option_data4 = transform_data_to_line_samples($scope.valid_sources, chart_info);
+                chart_option4.option = echart_set_common_line_data(option_data4);
+                chart_option4.container = document.getElementById('echart_total_win');
+
+                RenderCharts([chart_option, chart_option2, chart_option3, chart_option4])
             })
         };
         

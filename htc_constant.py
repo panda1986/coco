@@ -1,6 +1,6 @@
 #!python
 # -*- coding: utf-8 -*-
-import pyautogui
+import pyautogui, sys
 
 class Constants:
     max_diff_per = 35
@@ -10,6 +10,11 @@ class Constants:
     strategy_full_max_diff = 200000
     negative_max_value = 200000
     negative_min_value = 0
+    inflate_max_diff = 400000
+    inflate_min_value = 700000
+    positive2_max_diff_per = 45
+    positive2_min_value = 200000
+
 
     Screen15Config = {
         "roomPos": {
@@ -189,6 +194,27 @@ class Constants:
         }
     }
 
+
+def strategy_inflate(master, slave):
+    diff = master - slave
+    per = 0
+    option = ''
+    if diff > 0:
+        if diff > Constants.inflate_max_diff:
+            return (diff, per, option)
+        if master > Constants.inflate_min_value:
+            option = 'master'
+            return (diff, per, option)
+
+    if diff < 0:
+        if per < -Constants.inflate_max_diff:
+            return (diff, per, option)
+        if slave < - Constants.inflate_min_value:
+            option = 'slave'
+            return (diff, per, option)
+
+    return (diff, per, option)
+
 def strategy_full(master, slave):
     per = 0
     option = ''
@@ -203,6 +229,28 @@ def strategy_full(master, slave):
             option = 'slave'
         else:
             option = 'master'
+    return (diff, per, option)
+
+# 1. < 20W 不压了
+# 2. 高于 45%的比例
+def strategy_positive2(master, slave):
+    diff = master - slave
+    per = 0
+    option = ''
+    if diff > 0:
+        if diff < Constants.positive2_min_value:
+            return (diff, per, option)
+        per = diff * 100 / master
+        if per > Constants.positive2_max_diff_per:
+            option = 'slave'
+
+    if diff < 0:
+        if diff > -Constants.positive2_min_value:
+            return (diff, per, option)
+        per = diff * 100 / slave
+        if per < -Constants.positive2_max_diff_per:
+            option = 'master'
+
     return (diff, per, option)
 
 
@@ -244,12 +292,25 @@ def strategy_negative(master, slave):
 
 min_count_down = 6
 last_account_value = -1
+panda_mac_type = "000"
+macpro_type = "001"
+imac_fengtai_type = "002"
+imac_zhuxinzhuang_type = "003"
+
+print "sys argv=", sys.argv, len(sys.argv)
+if len(sys.argv) != 2:
+    print "请输入启动命令参数：001--mac pro; 002--丰台imac; 003-朱辛庄imac"
+    exit(-1)
+host_type = sys.argv[1]
+print "host_type=", host_type, host_type == '000'
+if host_type != panda_mac_type and host_type != macpro_type and host_type != imac_fengtai_type and host_type != imac_zhuxinzhuang_type:
+    print "only support 001--mac pro; 002--丰台imac; 003-朱辛庄imac"
+    exit(-1)
 
 sc = Constants.Screen15Config
-screenWidth, screenHeight = pyautogui.size()
-if screenWidth == 1280:
+if host_type == panda_mac_type:
     sc = Constants.Screen13Config
-elif screenWidth == 2048:
+elif host_type == imac_fengtai_type or host_type == imac_zhuxinzhuang_type:
     sc = Constants.ScreenImacConfig
 
 RoomPos = sc["roomPos"]
