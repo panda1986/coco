@@ -51,9 +51,13 @@ while True:
         htc_utility.write_log("imac fengtai full strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
         master, slave, diff, per, buy_option))
     elif htc_constant.host_type == htc_constant.macpro_type:
-        (diff, per, buy_option) = htc_constant.strategy_positive(master, slave)
-        htc_utility.write_log("mac15 positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
-        master, slave, diff, per, buy_option))
+        (diff, per, buy_option) = htc_constant.strategy_inflate(master, slave)
+        htc_utility.write_log("macpro inflate strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+            master, slave, diff, per, buy_option))
+        if buy_option == '':
+            (diff, per, buy_option) = htc_constant.strategy_positive(master, slave)
+            htc_utility.write_log("macpro positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+            master, slave, diff, per, buy_option))
     elif htc_constant.host_type == htc_constant.imac_zhuxinzhuang_type:
         (diff, per, buy_option) = htc_constant.strategy_inflate(master, slave)
         htc_utility.write_log("imac zhuxinzhuang inflate strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
