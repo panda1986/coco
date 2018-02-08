@@ -37,7 +37,7 @@ while True:
 
             if enter_png_continue_failed_count > max_enter_png_failed_count:
                 htc_utility.write_log("enter png continue failed count=%d, click refresh" % (enter_png_continue_failed_count))
-                pyautogui.click(htc_constant.RefreshPos["x"], htc_constant.RefreshPos["y"])
+                #pyautogui.click(htc_constant.RefreshPos["x"], htc_constant.RefreshPos["y"])
                 pyautogui.moveTo(10, 500)
                 enter_png_continue_failed_count = 0
 
@@ -113,7 +113,7 @@ while True:
 
             if enter_png_continue_failed_count > max_enter_png_failed_count:
                 htc_utility.write_log("enter png continue failed count=%d, click refresh" % (enter_png_continue_failed_count))
-                pyautogui.click(htc_constant.RefreshPos["x"], htc_constant.RefreshPos["y"])
+                #pyautogui.click(htc_constant.RefreshPos["x"], htc_constant.RefreshPos["y"])
                 pyautogui.moveTo(10, 500)
                 enter_png_continue_failed_count = 0
             continue
