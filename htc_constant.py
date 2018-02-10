@@ -205,7 +205,7 @@ def strategy_inflate(master, slave):
             return (diff, per, option)
 
     if diff < 0:
-        if slave < - Constants.inflate_min_value:
+        if slave > Constants.inflate_min_value:
             option = 'slave'
             return (diff, per, option)
 
