@@ -38,15 +38,6 @@
             <input type="number" style="width: 50px" ng-model="end.min" placeholder="分钟">:
             <input type="number" style="width: 50px" ng-model="end.sec" placeholder="秒">
         </div>
-    </div>
-
-    <div class="m-op f-cb">
-        <div class="pull-left marL5">
-            <label class="pull-left control-label pad0">下注额差值区间：</label>
-            <input type="number" style="width: 80px" ng-model="actual_diff.start"  placeholder="下注额差值起始">
-            <span>——</span>
-            <input type="number" style="width: 80px" ng-model="actual_diff.end"  placeholder="下注额差值结束">
-        </div>
 
         <div class="pull-left f-ml34">
             <label class="pull-left control-label pad0">状态：</label>
@@ -59,6 +50,27 @@
                     <option value="slave">闲</option>
                 </select>
             </div>
+        </div>
+    </div>
+
+    <div class="m-op f-cb">
+        <div class="pull-left marL5">
+            <label class="pull-left control-label pad0">差值百分比：</label>
+            <input type="number" style="width: 80px" ng-model="diff_per"  placeholder="set_diff 百分比">
+        </div>
+        <div class="pull-left marL5">
+            <label class="pull-left control-label pad0">庄min：</label>
+            <input type="number" style="width: 80px" ng-model="master_min"  placeholder="庄最小值">
+        </div>
+        <div class="pull-left marL5">
+            <label class="pull-left control-label pad0">闲min：</label>
+            <input type="number" style="width: 80px" ng-model="slave_min"  placeholder="闲最小值">
+        </div>
+        <div class="pull-left marL5">
+            <label class="pull-left control-label pad0">下注额差值区间：</label>
+            <input type="number" style="width: 80px" ng-model="actual_diff.start"  placeholder="下注额差值起始">
+            <span>——</span>
+            <input type="number" style="width: 80px" ng-model="actual_diff.end"  placeholder="下注额差值结束">
         </div>
 
         <button class="pull-left btn btn-primary f-ml34 u-btn" type="button" ng-click="Search()">查询</button>

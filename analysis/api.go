@@ -26,6 +26,9 @@ func (v ApiData)List(w http.ResponseWriter, r *http.Request)  {
     endTime, _ := strconv.ParseInt(q.Get("end_time"), 10, 64)
 
     buy_option := q.Get("buy_option")
+    per, _ := strconv.ParseInt(q.Get("diff_per"), 10, 64)
+    master_min, _ := strconv.ParseInt(q.Get("master_min"), 10, 64)
+    slave_min, _ := strconv.ParseInt(q.Get("slave_min"), 10, 64)
     set_diff_start, _ := strconv.ParseInt(q.Get("set_diff_start"), 10, 64)
     set_diff_end, _ := strconv.ParseInt(q.Get("set_diff_end"), 10, 64)
     actual_diff_start, _ := strconv.ParseInt(q.Get("actual_diff_start"), 10, 64)
@@ -47,7 +50,7 @@ func (v ApiData)List(w http.ResponseWriter, r *http.Request)  {
         actual_diff_search.end = actual_diff_end
     }
 
-    sources, err := DbSourcesAll(buy_option, stTime, endTime, set_diff_search, actual_diff_search)
+    sources, err := DbSourcesAll(buy_option, stTime, endTime, per, master_min, slave_min, set_diff_search, actual_diff_search)
     if err != nil {
         Error(err).ServeHTTP(w, r)
         return

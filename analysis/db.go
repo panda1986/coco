@@ -73,10 +73,10 @@ type DiffSearch struct {
     end int64
 }
 
-func DbSourcesAll(buy_option string, start_time int64, end_time int64, set_diff_search *DiffSearch, actual_diff_search *DiffSearch) (sources []*AnaysisSourceData, err error) {
+func DbSourcesAll(buy_option string, start_time, end_time, diff_per, master_min, slave_min int64, set_diff_search *DiffSearch, actual_diff_search *DiffSearch) (sources []*AnaysisSourceData, err error) {
     sources = []*AnaysisSourceData{}
-    query := fmt.Sprintf("select %s from analysis where create_time >= ? and create_time < ?", strings.Join(SourceFileds, ","))
     args := []interface{}{}
+    query := fmt.Sprintf("select %s from analysis where create_time >= ? and create_time < ?", strings.Join(SourceFileds, ","))
     args = append(args, start_time, end_time)
     if len(buy_option) > 0 {
         if buy_option == "empty" {
@@ -88,6 +88,22 @@ func DbSourcesAll(buy_option string, start_time int64, end_time int64, set_diff_
             query += " and buy_option = ?"
             args = append(args, buy_option)
         }
+    }
+    if diff_per > 0 {
+        query += " and abs( if(set_diff>0, set_diff * 100/set_master, -set_diff*100/set_slave)) > ?"
+        args = append(args, diff_per)
+    }
+    if master_min > 0 {
+        query += " and set_master > ?"
+        args = append(args, master_min)
+    } else {
+        query += " and set_master > 0"
+    }
+    if slave_min > 0 {
+        query += " and set_slave > ?"
+        args = append(args, slave_min)
+    } else {
+        query += " and set_slave > 0"
     }
     if set_diff_search.valid {
         query += " and abs(set_diff) > ? and abs(set_diff) <= ?"

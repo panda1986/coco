@@ -17,6 +17,9 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
             min:59,
             sec:59
         };
+        $scope.diff_per = 0;
+        $scope.master_min = 0;
+        $scope.slave_min = 0;
         $scope.buy_option = 'not_empty';
         $scope.valid_sources = [];
 
@@ -88,6 +91,8 @@ vac.controller('dataMgmtCtrl', ['$scope', '$uibModal', 'datepicker', 'vacApi', '
 
         var get_data = function () {
             var query = "?start_time=" + get_start_timestamp() + "&end_time=" + get_end_timestamp();
+            query += "&diff_per=" + $scope.diff_per;
+            query += "&master_min=" + $scope.master_min + "&slave_min=" + $scope.slave_min;
             if ($scope.actual_diff.start != 0 || $scope.actual_diff.end != 0) {
                 query += "&set_diff_start=" + $scope.actual_diff.start + "&set_diff_end=" + $scope.actual_diff.end;
             }
