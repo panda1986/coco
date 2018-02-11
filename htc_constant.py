@@ -8,7 +8,7 @@ class Constants:
     positive_min_per = 5
     strategy_full_min_diff = 30000
     strategy_full_max_diff = 200000
-    negative_max_value = 200000
+    negative_max_value = 80000
     negative_min_value = 0
     inflate_max_diff = 400000
     inflate_min_value = 700000
@@ -260,14 +260,14 @@ def strategy_positive(master, slave):
             if diff > Constants.negative_min_value and diff < Constants.negative_max_value:
                 option = 'master'
             else:
-                option = 'slave'
+                option = ''
     if diff < 0:
         per = diff * 100 / slave
         if per < -Constants.max_diff_per:
             if diff > -Constants.negative_max_value and diff < -Constants.negative_min_value:
                 option = 'slave'
             else:
-                option = 'master'
+                option = ''
     return (diff, per, option)
 
 
