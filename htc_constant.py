@@ -136,8 +136,8 @@ class Constants:
     }
     ScreenImacConfig = {
         "roomPos": {
-            "x": 78,
-            "y": 378
+            "x": 995,
+            "y": 1121
         },
         "200buttonPos": {
             "x": 1406,

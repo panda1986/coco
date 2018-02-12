@@ -25,7 +25,7 @@ while True:
         if count_down <= 0 and last_count_down <= 0:
             res = list(pyautogui.locateAllOnScreen(htc_constant.EnterPng))
             if len(res) > 0:
-                htc_utility.write_log("has enter, click to enter game, and mouse move to origin")
+                htc_utility.write_log("has enter, click to enter game, and mouse move to origin, room pos=%d, %d"%(htc_constant.RoomPos["x"], htc_constant.RoomPos["y"]))
                 pyautogui.click(htc_constant.RoomPos["x"], htc_constant.RoomPos["y"])
                 time.sleep(1)
                 pyautogui.click(htc_constant.EnterClickPos["x"], htc_constant.EnterClickPos["y"])
@@ -47,8 +47,8 @@ while True:
     enter_png_continue_failed_count = 0
     htc_utility.write_log("count down=%d satisfy, master=%f, slave=%f, come to comput buy option" % (count_down, master, slave))
     if htc_constant.host_type == htc_constant.imac_fengtai_type:
-        (diff, per, buy_option) = htc_constant.strategy_full(master, slave)
-        htc_utility.write_log("imac fengtai full strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+        (diff, per, buy_option) = htc_constant.strategy_positive(master, slave)
+        htc_utility.write_log("imac fengtai positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
         master, slave, diff, per, buy_option))
     elif htc_constant.host_type == htc_constant.macpro_type:
         # (diff, per, buy_option) = htc_constant.strategy_inflate(master, slave)
