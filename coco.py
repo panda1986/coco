@@ -59,14 +59,17 @@ while True:
         htc_utility.write_log("macpro positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
         master, slave, diff, per, buy_option))
     elif htc_constant.host_type == htc_constant.imac_zhuxinzhuang_type:
-        (diff, per, buy_option) = htc_constant.strategy_inflate(master, slave)
-        htc_utility.write_log("imac zhuxinzhuang inflate strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+        # (diff, per, buy_option) = htc_constant.strategy_inflate(master, slave)
+        # htc_utility.write_log("imac zhuxinzhuang inflate strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+        #     master, slave, diff, per, buy_option))
+        # if buy_option == '':
+        #     (diff, per, buy_option) = htc_constant.strategy_positive2(master, slave)
+        #     htc_utility.write_log(
+        #         "imac zhuxinzhuang positive2 strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
+        #             master, slave, diff, per, buy_option))
+        (diff, per, buy_option) = htc_constant.strategy_positive(master, slave)
+        htc_utility.write_log("imac zhuxinzhuang positive strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
             master, slave, diff, per, buy_option))
-        if buy_option == '':
-            (diff, per, buy_option) = htc_constant.strategy_positive2(master, slave)
-            htc_utility.write_log(
-                "imac zhuxinzhuang positive2 strategy, master=%f, slave=%f, diff=%d, per=%f, option=%s" % (
-                    master, slave, diff, per, buy_option))
 
     if buy_option == 'master':
         #pyautogui.click(htc_constant.ButtonLevelPos["x"], htc_constant.ButtonLevelPos["y"])
@@ -101,7 +104,7 @@ while True:
             htc_utility.clear(source, htc_constant.CountDownPos["pngName"], "", "")
             res = list(pyautogui.locateAllOnScreen(htc_constant.EnterPng))
             if len(res) > 0:
-                htc_utility.write_log("has enter, click to enter game, and mouse move to origin")
+                htc_utility.write_log("has enter, click to enter game, and mouse move to origin, x=%d, y=%d" % (htc_constant.RoomPos["x"], htc_constant.RoomPos["y"]))
                 pyautogui.click(htc_constant.RoomPos["x"], htc_constant.RoomPos["y"])
                 time.sleep(1)
                 pyautogui.click(htc_constant.EnterClickPos["x"], htc_constant.EnterClickPos["y"])

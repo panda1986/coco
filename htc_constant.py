@@ -136,8 +136,8 @@ class Constants:
     }
     ScreenImacConfig = {
         "roomPos": {
-            "x": 995,
-            "y": 1121
+            "x": 167,
+            "y": 416
         },
         "200buttonPos": {
             "x": 1406,
@@ -181,8 +181,67 @@ class Constants:
             "y": 945
         },
         "EnterClickPos": {
-            "x": 988,
-            "y": 624
+            "x": 995,
+            "y": 1121
+        },
+        "EnterPng": "enter_imac.png",
+        "AccountValuePos": {
+            "x": 1527 * 2,
+            "y":111 * 2,
+            "w": 141 * 2,
+            "h":28 * 2,
+            "pngName": "imgs/account.png",
+        }
+    }
+    ScreenImacZhuxinzhuangConfig = {
+        "roomPos": {
+            "x": 167,
+            "y": 416
+        },
+        "200buttonPos": {
+            "x": 1406,
+            "y": 858
+        },
+        "1000buttonPos": {
+            "x": 1563,
+            "y": 849
+        },
+        "RefreshPos": { #need to re comput
+            "x": 76,
+            "y": 57
+        },
+        "CountDownPos": {
+            "x": 236 * 2,
+            "y":109 * 2,
+            "w": 132 * 2,
+            "h":47 * 2,
+            "pngName": "count_down.png",
+            "result": 0
+        },
+        "AmountBetPos": {
+            "x": 1818 * 2,
+            "y":78 * 2,
+            "w": 132 * 2,
+            "h":54 * 2,
+            "pngName": "amount_bet.png",
+            "master": 0,
+            "slave": 0
+        },
+        "MasterClickPos": {
+            "x": 1047,
+            "y": 784
+        },
+        "SlaveClickPos": {
+            "x": 1042,
+            "y": 861
+        },
+        "ConfirmClickPos": {
+            "x": 1083,
+            "y": 945
+        },
+        "EnterClickPos": {
+            "x": 1851,
+            "y": 875
         },
         "EnterPng": "enter_imac.png",
         "AccountValuePos": {
@@ -306,8 +365,10 @@ if host_type != panda_mac_type and host_type != macpro_type and host_type != ima
 sc = Constants.Screen15Config
 if host_type == panda_mac_type:
     sc = Constants.Screen13Config
-elif host_type == imac_fengtai_type or host_type == imac_zhuxinzhuang_type:
+elif host_type == imac_fengtai_type:
     sc = Constants.ScreenImacConfig
+elif host_type == imac_zhuxinzhuang_type:
+    sc = Constants.ScreenImacZhuxinzhuangConfig
 
 RoomPos = sc["roomPos"]
 RefreshPos = sc["RefreshPos"]
