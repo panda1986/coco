@@ -195,7 +195,7 @@ def deal_img(src):
 
     #  convert to grey level image
     Lim = im.convert('L')
-    mid = name + '_''fun_Level.png'
+    mid = name + '_''fun_Level.tif'
     Lim.save(mid)
     #  setup a converting table with constant threshold
     threshold = 80
@@ -209,7 +209,7 @@ def deal_img(src):
     # convert to binary image by the table
     bim = Lim.point(table, '1')
 
-    final = name + '_fun_binary.png'
+    final = name + '_fun_binary.tif'
     bim.save(final)
     return mid, final
 
@@ -322,7 +322,10 @@ def deal_account_value(source, tt):
     clear_single_png(source)
     clear_single_png(htc_constant.AccountValuePos["pngName"])
     clear_single_png(middle)
-    res = image_to_string(final, plus="-psm 8")
+    if htc_constant.host_type == htc_constant.imac_zhuxinzhuang_type:
+        res = image_to_string(final, plus="-l num")
+    else:
+        res = image_to_string(final, plus="-psm 8")
     if len(res) == 0:
         write_log("ocr account value text failed, loop continue")
         return account_value

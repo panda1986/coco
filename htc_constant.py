@@ -247,9 +247,9 @@ class Constants:
         "AccountValuePos": {
             "x": 1527 * 2,
             "y":111 * 2,
-            "w": 141 * 2,
-            "h":28 * 2,
-            "pngName": "imgs/account.png",
+            "w": 90 * 2,
+            "h":26 * 2,
+            "pngName": "imgs/account.tif",
         }
     }
 
