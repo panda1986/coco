@@ -85,6 +85,9 @@ while True:
     else:
         htc_utility.write_log("amount bet=%f %f, not satisfy condition, ignore" % (master, slave))
 
+    if buy_option == '':
+        continue
+
     time.sleep(5)
     (final_master, final_slave) = htc_utility.get_final_master_slave()
     htc_utility.write_log("get final master=%f, slave=%s" % (final_master, final_slave))

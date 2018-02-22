@@ -310,7 +310,7 @@ def deal_count_down(source):
 
 def deal_account_value(source, tt):
     account_value = -1
-    segs = ["imgs", "account.png"]
+    segs = ["imgs", "account.tif"]
     htc_constant.AccountValuePos["pngName"] = "%s/%s_%s" % (segs[0], tt, segs[1])
     code = convert(htc_constant.AccountValuePos, source)
     if code != error_success:
@@ -337,8 +337,8 @@ def deal_account_value(source, tt):
         ex, traceback.format_exc()))
         account_value = -1
     finally:
-        if account_value > 0:
-            clear_single_png(final)
+        #if account_value > 0:
+            #clear_single_png(final)
         return account_value
 
 # check if valid,
