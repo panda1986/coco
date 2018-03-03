@@ -181,8 +181,8 @@ class Constants:
             "y": 945
         },
         "EnterClickPos": {
-            "x": 995,
-            "y": 1121
+            "x": 1001,
+            "y": 526
         },
         "EnterPng": "enter_imac.png",
         "AccountValuePos": {

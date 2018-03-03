@@ -322,7 +322,7 @@ def deal_account_value(source, tt):
     clear_single_png(source)
     clear_single_png(htc_constant.AccountValuePos["pngName"])
     clear_single_png(middle)
-    if htc_constant.host_type == htc_constant.imac_zhuxinzhuang_type:
+    if htc_constant.host_type != htc_constant.macpro_type:
         res = image_to_string(final, plus="-psm 8 -l num")
     else:
         res = image_to_string(final, plus="-psm 8")
